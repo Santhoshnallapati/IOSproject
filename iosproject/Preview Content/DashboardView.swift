@@ -43,7 +43,7 @@ struct DashboardView: View {
             }
             
             NavigationLink(destination: BorrowedBooksView(borrowedBooks: $borrowedBooks)) {
-                Text("View Borrowed Books")
+                Text("check Borrowed Books")
                     .frame(minWidth: 0, maxWidth: .infinity)
                     .padding()
                     .background(Color.orange)
@@ -67,6 +67,10 @@ struct DashboardView: View {
     }
 }
 
+
+
+
+//preview
 struct DashboardView_Previews: PreviewProvider {
     static var previews: some View {
         DashboardView()
