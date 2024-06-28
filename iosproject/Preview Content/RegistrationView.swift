@@ -13,6 +13,9 @@ struct RegistrationView: View {
     @State private var password = ""
     @State private var confirmPassword = ""
     @State private var errorMessage = ""
+    @State private var alertMessage = " "
+    @State private var isShowingalert = false
+    @State var isPresented: Bool
     
     var body: some View {
         VStack {
@@ -43,7 +46,7 @@ struct RegistrationView: View {
             }
             
             Button(action: {
-                register()
+                SignUp()
             }) {
                 Text("Sign Up")
                     .frame(minWidth: 0, maxWidth: .infinity)
@@ -57,25 +60,67 @@ struct RegistrationView: View {
         .padding()
     }
     
-    private func register() {
-        guard password == confirmPassword else {
-            errorMessage = "Passwords do not match"
-            return
-        }
-        
-        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
-            if let error = error {
-                errorMessage = error.localizedDescription
-                return
+//    private func register() {
+//        guard password == confirmPassword else {
+//            errorMessage = "Passwords do not match"
+//            return
+//        }
+//        
+//        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+//            if let error = error {
+//                alertMessage=error.localizedDescription
+//                isShowingalert = true
+//            }
+//            
+//            
+//            else{
+//                
+//                isPresented = false
+//            }
+//        }
+//    }
+    
+    private func SignUp(){
+      
+        Auth.auth().createUser(withEmail: email, password: password){
+            authResult, error in
+            if let error = error{
+                
+                alertMessage=error.localizedDescription
+                isShowingalert = true
+                
+            }else{
+                
+                isPresented = false
             }
-            // Optional: Add any additional user setup or navigation here
-            errorMessage = "Registration successful"
+            
+            
         }
     }
 }
 
-
+ 
 
 #Preview {
-    RegistrationView()
+    RegistrationView(isPresented: true)
 }
+
+
+
+//private func SignUp(){
+//  
+//    Auth.auth().createUser(withEmail: email, password: password){
+//        authResult, error in
+//        if let error = error{
+//            
+//            alertMessage=error.localizedDescription
+//            isShowingalert = true
+//            
+//        }else{
+//            
+//            isPresented = false
+//        }
+//        
+//        
+//    }
+//}
