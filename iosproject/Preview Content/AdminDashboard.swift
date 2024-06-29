@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct AdminDashboard: View {
-    
     @StateObject private var databaseManager = DatabaseManager()
     @State private var items:[AdminBookItem] = []
     @State private var newItemName = ""
@@ -19,7 +18,7 @@ struct AdminDashboard: View {
     @State private var selectedItem : AdminBookItem?
     
     var body: some View {
-        
+        NavigationView{
             VStack{
                 List{
                     ForEach(items){ item in
@@ -102,9 +101,12 @@ struct AdminDashboard: View {
                 }
                 .padding()
             }
-            .navigationTitle("AdminBookItem : ")
+            .navigationTitle("Items : ")
             .navigationBarItems(trailing: EditButton())
         }
+        
+    }
+    
     private func deleteItems(at offsets : IndexSet){
         for index in offsets{
             let item = items[index]
@@ -112,16 +114,9 @@ struct AdminDashboard: View {
         }
         items.remove(atOffsets: offsets)
     }
-
-    }
-    
-
-
-
-struct ContentView_preview : PreviewProvider{
-    static var previews: some View{
+}
+struct AdminDashboard_Previews: PreviewProvider {
+    static var previews: some View {
         AdminDashboard()
     }
 }
-
-

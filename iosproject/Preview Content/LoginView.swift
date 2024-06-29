@@ -1,52 +1,41 @@
-//
-//  LoginView.swift
-//  iosproject
-//
-//  Created by Santhosh Nallapati on 2024-06-25.
-//
-
 import SwiftUI
+import FirebaseAuth
 
 struct LoginView: View {
     @Binding var isLoggedIn: Bool
+    @Binding var isAdmin: Bool
     @State private var username = ""
     @State private var password = ""
-    @State private var logintype = ""
-    @State private var isClicked: Bool = false
-    
+    @State private var showAlert = false
+    @State private var alertMessage = ""
+    @State private var showRegistrationView = false
+
     var body: some View {
-        NavigationStack{
+        NavigationStack {
             VStack {
-                
-                
-                Image(.libraryLogo).resizable().frame(width:250, height:200)
+                Image(.libraryLogo)
+                    .resizable()
+                    .frame(width: 250, height: 200)
                     .scaledToFit()
-                VStack{
-                    HStack{
-                        
-                        Picker("logintype", selection: $logintype){
-                            Text("Admin").tag("admin")
-                            Text("user").tag("user")
-                            
-                        }.pickerStyle(.segmented).frame(width: 200,height: 100,alignment: .center)
-                    }
-                }
-                Text("Login").font(.largeTitle)
+
+                Text("Login")
+                    .font(.largeTitle)
                     .padding()
-                VStack{
-                    
-                    
-                    TextField("Enter your Username", text: $username)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
+
+                VStack {
+                    TextField("Enter your Email", text: $username)
                         .padding()
-                    
+                        .frame(width: 400, height: 50, alignment: .center)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .textContentType(.emailAddress)
+
                     SecureField("Enter Password", text: $password)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding()
-                    
+                        .textContentType(.password)
+
                     Button(action: {
-                        
-                        isLoggedIn = true
+                        login()
                     }) {
                         Text("Login")
                             .padding()
@@ -54,23 +43,59 @@ struct LoginView: View {
                             .foregroundColor(.white)
                             .cornerRadius(10)
                     }
+                    .alert(isPresented: $showAlert) {
+                        Alert(title: Text("Login Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                    }
                     .padding()
-                    
-                    
-                    NavigationLink(destination: RegistrationView(isPresented: true),label: {
-                        Text("New to application Sign Up").padding()
-                            
-                        
-                    }).padding()
-                }.navigationBarTitle("Login")
+
+                    NavigationLink(destination: RegistrationView(isPresented: $showRegistrationView)) {
+                        Text("New to Library? Sign Up").padding()
+                    }
+                    .padding()
+                }
+                .navigationBarTitle("Login")
             }
         }
     }
-    
-    struct LoginView_Previews: PreviewProvider {
-        static var previews: some View {
-            LoginView(isLoggedIn: .constant(false))
+
+    private func login() {
+            print(" login with email: \(username)")
+            Auth.auth().signIn(withEmail: username, password: password) { authResult, error in
+                if let error = error {
+                    print("Login error: \(error.localizedDescription)")
+                    alertMessage = error.localizedDescription
+                    showAlert = true
+                    return
+                }
+                
+                // Successfully authenticated
+                if let user = authResult?.user {
+                    print("Login successful for user: \(user.email ?? "")")
+                    DispatchQueue.main.async {
+                        isLoggedIn = true
+                        checkAdminPrivileges(for: user)
+                    }
+                }
+            }
+        }
+
+    private func checkAdminPrivileges(for user: User) {
+            let adminEmail = "Gaddamsubashreddy0519@gmail.com"
+            
+            DispatchQueue.main.async {
+                if user.email == adminEmail {
+                    print("Admin privileges granted")
+                    isAdmin = true
+                } else {
+                    print("Regular user privileges granted")
+                    isAdmin = false
+                }
+                print("isLoggedIn: \(isLoggedIn), isAdmin: \(isAdmin)")
+            }
         }
     }
-    
+struct LoginView_Previews: PreviewProvider {
+    static var previews: some View {
+        LoginView(isLoggedIn: .constant(false), isAdmin: .constant(false))
+    }
 }

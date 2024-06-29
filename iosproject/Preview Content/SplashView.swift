@@ -12,15 +12,11 @@ struct SplashView: View {
     
     var body: some View {
         VStack {
-            Text("Library Management System")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .padding()
+
             
-            Image(systemName: "book.circle.fill")
-                .resizable()
-                .frame(width: 100, height: 100)
-                .foregroundColor(.blue)
+            Image(.libraryLogo).resizable()
+                .scaledToFit()
+ .foregroundColor(.blue)
         }
         .onAppear {
             print("SplashView appeared")
@@ -39,8 +35,4 @@ struct SplashView_Previews: PreviewProvider {
         SplashView(isActive: .constant(true))
     }
 }
-
-
-
-
 

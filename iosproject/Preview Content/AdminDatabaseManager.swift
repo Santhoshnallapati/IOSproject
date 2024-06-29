@@ -6,7 +6,6 @@
 //
 
 import Foundation
-
 import FirebaseDatabase
 
 
@@ -48,4 +47,3 @@ class DatabaseManager :ObservableObject{
     }
 
 }
-
