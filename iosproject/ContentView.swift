@@ -10,13 +10,11 @@ struct ContentView: View {
             SplashView(isActive: $isActive)
         } else if isLoggedIn {
             if isAdmin {
-               
                AdminDashboard()
                
-               
             } else {
-               // AdminDashboard()
-               DashboardView()
+               
+               UserDashboard()
                 
             }
         } else {
