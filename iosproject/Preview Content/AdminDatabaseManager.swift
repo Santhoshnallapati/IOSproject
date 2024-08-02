@@ -16,12 +16,12 @@ class DatabaseManager :ObservableObject{
     
     func addItem(_ item: AdminBookItem){
         let itemRef = database.child("items").child(item.id)
-        itemRef.setValue(["bookname": item.bookname,"bookdescription":item.bookdescription,"Authorname" :item.Authorname, "bookurl" : item.bookurl])
+        itemRef.setValue(["bookname": item.bookname,"bookdescription":item.bookdescription,"Authorname" :item.Authorname, "bookurl" : item.bookurl, "isAvaialble " : item.isAvailable])
     }
     
     func updateItem(_ item: AdminBookItem){
         let itemRef = database.child("items").child(item.id)
-        itemRef.updateChildValues(["bookname": item.bookname,"bookdescription":item.bookdescription,"Authorname" :item.Authorname, "bookurl" : item.bookurl])
+        itemRef.updateChildValues(["bookname": item.bookname,"bookdescription":item.bookdescription,"Authorname" :item.Authorname, "bookurl" : item.bookurl,"isAvaialble " : item.isAvailable])
     }
     
     func deleteItem(_ item: AdminBookItem){
