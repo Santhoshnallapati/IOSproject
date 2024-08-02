@@ -11,6 +11,7 @@ import FirebaseDatabase
 
 class DatabaseManager :ObservableObject{
     
+    @Published var items: [AdminBookItem] = []
     private let database = Database.database().reference();
     
     func addItem(_ item: AdminBookItem){
