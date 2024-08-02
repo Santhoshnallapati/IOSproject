@@ -10,11 +10,12 @@ struct LoginView: View {
     @State private var showAlert = false
     @State private var alertMessage = ""
     @State private var showRegistrationView = false
+    @State private var navigateToDashboard: Bool = false
 
     var body: some View {
         NavigationStack {
             VStack {
-                Image("library_logo") // Ensure this matches your asset name
+                Image("library_logo")
                     .resizable()
                     .frame(width: 250, height: 200)
                     .scaledToFit()
@@ -54,6 +55,27 @@ struct LoginView: View {
                             .padding()
                     }
                     .padding()
+
+                    
+                    NavigationLink(
+                        destination: AdminDashboard(),
+                        isActive: Binding(
+                            get: { isLoggedIn && isAdmin && navigateToDashboard },
+                            set: { _ in }
+                        )
+                    ) {
+                        EmptyView()
+                    }
+                    
+                    NavigationLink(
+                        destination: UserDashboard(),
+                        isActive: Binding(
+                            get: { isLoggedIn && !isAdmin && navigateToDashboard },
+                            set: { _ in }
+                        )
+                    ) {
+                        EmptyView()
+                    }
                 }
                 .navigationBarTitle("Login")
             }
@@ -88,6 +110,7 @@ struct LoginView: View {
                 DispatchQueue.main.async {
                     isLoggedIn = true
                     isAdmin = (role == "Admin")
+                    navigateToDashboard = true
                 }
             } else {
                 alertMessage = "Role not found"
