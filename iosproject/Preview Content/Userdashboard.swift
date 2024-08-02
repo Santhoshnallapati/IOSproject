@@ -1,16 +1,10 @@
-//
-//  UserDashboard.swift
-//  iosproject
-//
-//  Created by Subash Gaddam on 2024-06-27.
-//
-
 import SwiftUI
 
 struct UserDashboard: View {
     @StateObject private var databaseManager = DatabaseManager()
     @State private var selectedItem: AdminBookItem?
     @State private var showingAlert = false
+    @State private var isReturning = false
 
     var body: some View {
         NavigationView {
@@ -47,25 +41,34 @@ struct UserDashboard: View {
                             if item.isAvailable {
                                 Button("Borrow") {
                                     selectedItem = item
+                                    isReturning = false
                                     showingAlert = true
                                 }
                                 .padding(.top, 5)
                                 .foregroundColor(.blue)
                             } else {
-                                Text("Unavailable")
-                                    .foregroundColor(.red)
-                                    .padding(.top, 5)
+                                Button("Return") {
+                                    selectedItem = item
+                                    isReturning = true
+                                    showingAlert = true
+                                }
+                                .padding(.top, 5)
+                                .foregroundColor(.green)
                             }
                         }
                     }
                 }
                 .alert(isPresented: $showingAlert) {
                     Alert(
-                        title: Text("Confirm Borrow"),
-                        message: Text("Do you want to borrow \(selectedItem?.bookname ?? "this book")?"),
-                        primaryButton: .default(Text("Yes")) {
+                        title: Text(isReturning ? "Confirm Return" : "Confirm Borrow"),
+                        message: Text(isReturning ? "Do you want to return \(selectedItem?.bookname ?? "this book")?" : "Do you want to borrow \(selectedItem?.bookname ?? "this book")?"),
+                        primaryButton: .default(Text(isReturning ? "Return" : "Borrow")) {
                             if let item = selectedItem {
-                                databaseManager.borrowItem(item)
+                                if isReturning {
+                                    databaseManager.returnBook(item)
+                                } else {
+                                    databaseManager.borrowItem(item)
+                                }
                             }
                         },
                         secondaryButton: .cancel()
@@ -73,6 +76,11 @@ struct UserDashboard: View {
                 }
             }
             .navigationTitle("Available Books")
+            .onAppear {
+                databaseManager.fetchItem { books in
+                    databaseManager.Books = books
+                }
+            }
         }
     }
 }
