@@ -11,11 +11,12 @@ struct ContentView: View {
         } else if isLoggedIn {
             if isAdmin {
                
-                DashboardView()
+               AdminDashboard()
+               
                
             } else {
-                
-                AdminDashboard()
+               // AdminDashboard()
+               DashboardView()
                 
             }
         } else {

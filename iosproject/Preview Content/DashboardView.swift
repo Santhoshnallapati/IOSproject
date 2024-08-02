@@ -4,8 +4,8 @@
 //
 //  Created by Santhosh Nallapati on 2024-06-25.
 
-
 import SwiftUI
+import FirebaseAuth
 
 struct DashboardView: View {
     @State private var searchText = ""
@@ -37,9 +37,30 @@ struct DashboardView: View {
                         }
                     }
                 }
-            }.navigationTitle("User")
+            }
+            .navigationTitle("User")
+            
+            Button(action: {
+                logout()
+            }) {
+                Text("Logout")
+                    .foregroundColor(.red)
+                    .padding()
+                    .background(Color.white)
+                    .cornerRadius(8)
+                    .shadow(radius: 5)
+            }
+            .padding()
         }
         .padding()
+    }
+    
+    private func logout() {
+        do {
+            try Auth.auth().signOut()
+        } catch let signOutError as NSError {
+            print("Error signing out: %@", signOutError)
+        }
     }
 }
 
@@ -48,5 +69,3 @@ struct DashboardView_Previews: PreviewProvider {
         DashboardView()
     }
 }
-
-
