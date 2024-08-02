@@ -44,11 +44,21 @@ class DatabaseManager :ObservableObject{
         }
         
     
-    func updateItem(_ item: AdminBookItem){
-        let itemRef = database.child("Books").child(item.id)
-        itemRef.updateChildValues(["bookname": item.bookname,"bookdescription":item.bookdescription,"Authorname" :item.Authorname, "bookurl" : item.bookurl,"isAvaialble " : item.isAvailable])
-    }
-    
+    func updateItem(_ item: AdminBookItem, completion: @escaping (Bool) -> Void) {
+            guard userRole == "Admin" else {
+                completion(false)
+                return
+            }
+            
+            let itemRef = database.child("Books").child(item.id)
+            itemRef.updateChildValues(["bookname": item.bookname,
+                                       "bookdescription": item.bookdescription,
+                                       "Authorname": item.Authorname,
+                                       "bookurl": item.bookurl,
+                                       "isAvailable": item.isAvailable]) { error, _ in
+                completion(error == nil)
+            }
+        }
     func deleteItem(_ item: AdminBookItem){
         let itemRef = database.child("Books").child(item.id)
         itemRef.removeValue()
