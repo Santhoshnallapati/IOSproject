@@ -9,17 +9,18 @@ class DatabaseManager: ObservableObject {
     
     
     func addItem(_ item: AdminBookItem) {
-        let itemRef = database.child("Books").child(item.id)
-        itemRef.setValue(["bookname": item.bookname,
-                          "bookdescription": item.bookdescription,
-                          "Authorname": item.Authorname,
-                          "bookurl": item.bookurl,
-                          "isAvailable": item.isAvailable]) { error, _ in
-            if let error = error {
-                print("Error adding item: \(error.localizedDescription)")
-            }
-        }
-    }
+          let itemRef = database.child("Books").child(item.id)
+          itemRef.setValue(["bookname": item.bookname,
+                            "bookdescription": item.bookdescription,
+                            "Authorname": item.Authorname,
+                            "bookurl": item.bookurl,
+                            "isAvailable": item.isAvailable,
+                            "borrowedByUserID": item.borrowedByUserID ?? ""]) { error, _ in
+              if let error = error {
+                  print("Error adding item: \(error.localizedDescription)")
+              }
+          }
+      }
     
     func updateItem(_ item: AdminBookItem) {
         let itemRef = database.child("Books").child(item.id)
