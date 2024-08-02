@@ -11,22 +11,22 @@ import FirebaseDatabase
 
 class DatabaseManager :ObservableObject{
     
-    @Published var items: [AdminBookItem] = []
-    private let database = Database.database().reference();
-    
+    @Published var Books: [AdminBookItem] = []
+        private let database = Database.database().reference()
+        
 
     func addItem(_ item: AdminBookItem){
-        let itemRef = database.child("items").child(item.id)
+        let itemRef = database.child("Books").child(item.id)
         itemRef.setValue(["bookname": item.bookname,"bookdescription":item.bookdescription,"Authorname" :item.Authorname, "bookurl" : item.bookurl, "isAvaialble " : item.isAvailable])
     }
     
     func updateItem(_ item: AdminBookItem){
-        let itemRef = database.child("items").child(item.id)
+        let itemRef = database.child("Books").child(item.id)
         itemRef.updateChildValues(["bookname": item.bookname,"bookdescription":item.bookdescription,"Authorname" :item.Authorname, "bookurl" : item.bookurl,"isAvaialble " : item.isAvailable])
     }
     
     func deleteItem(_ item: AdminBookItem){
-        let itemRef = database.child("items").child(item.id)
+        let itemRef = database.child("Books").child(item.id)
         itemRef.removeValue()
     }
     func borrowItem(_ item: AdminBookItem) {
@@ -36,8 +36,8 @@ class DatabaseManager :ObservableObject{
         }
     
     func fetchItem(completion: @escaping(([AdminBookItem]) -> Void )){
-        database.child("items").observe(.value){ snapShot in
-            var items:[AdminBookItem] = []
+        database.child("Books").observe(.value){ snapShot in
+            var Books:[AdminBookItem] = []
             for child in snapShot.children{
                 if let snapshot = child as? DataSnapshot,
                    let value = snapshot.value as? [String: Any],
@@ -48,10 +48,10 @@ class DatabaseManager :ObservableObject{
                     let isAvailable = value["isAvailable"] as? Bool
                 {
                     let item = AdminBookItem(id: snapshot.key,bookname : bookname,Authorname: Authorname, bookdescription: bookdescription, bookurl: bookurl,isAvailable: isAvailable)
-                    items.append(item)
+                    Books.append(item)
                 }
             }
-            completion(items)
+            completion(Books)
         }
     }
 

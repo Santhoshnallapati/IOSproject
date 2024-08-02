@@ -51,7 +51,7 @@ struct AdminDashboard: View {
                                                         }
                                                     }
                             
-                           //Text(item.bookurl).font(.subheadline)
+                           
                         }
                         .onTapGesture {
                             selectedItem = item
@@ -101,7 +101,7 @@ struct AdminDashboard: View {
                 }
                 .padding()
             }
-            .navigationTitle("Items : ")
+            .navigationTitle("Books : ")
             .navigationBarItems(trailing: EditButton())
         }
         
