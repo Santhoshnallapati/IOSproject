@@ -61,27 +61,29 @@ class DatabaseManager: ObservableObject {
        
     
     func fetchItem(completion: @escaping ([AdminBookItem]) -> Void) {
-        database.child("Books").observe(.value) { snapshot in
-            var books: [AdminBookItem] = []
-            for child in snapshot.children {
-                if let snapshot = child as? DataSnapshot,
-                   let value = snapshot.value as? [String: Any],
-                   let bookname = value["bookname"] as? String,
-                   let bookdescription = value["bookdescription"] as? String,
-                   let Authorname = value["Authorname"] as? String,
-                   let bookurl = value["bookurl"] as? String,
-                   let isAvailable = value["isAvailable"] as? Bool {
-                    
-                    let item = AdminBookItem(id: snapshot.key,
-                                             bookname: bookname,
-                                             Authorname: Authorname,
-                                             bookdescription: bookdescription,
-                                             bookurl: bookurl,
-                                             isAvailable: isAvailable)
-                    books.append(item)
+            database.child("Books").observe(.value) { snapshot in
+                var books: [AdminBookItem] = []
+                for child in snapshot.children {
+                    if let snapshot = child as? DataSnapshot,
+                       let value = snapshot.value as? [String: Any],
+                       let bookname = value["bookname"] as? String,
+                       let bookdescription = value["bookdescription"] as? String,
+                       let Authorname = value["Authorname"] as? String,
+                       let bookurl = value["bookurl"] as? String,
+                       let isAvailable = value["isAvailable"] as? Bool {
+                        
+                        let borrowedUserID = value["borrowedUserID"] as? String
+                        let item = AdminBookItem(id: snapshot.key,
+                                                 bookname: bookname,
+                                                 Authorname: Authorname,
+                                                 bookdescription: bookdescription,
+                                                 bookurl: bookurl,
+                                                 isAvailable: isAvailable,
+                                                 borrowedUserID: borrowedUserID)
+                        books.append(item)
+                    }
                 }
+                completion(books)
             }
-            completion(books)
         }
     }
-}
