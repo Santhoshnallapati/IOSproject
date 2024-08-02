@@ -14,6 +14,7 @@ class DatabaseManager :ObservableObject{
     @Published var items: [AdminBookItem] = []
     private let database = Database.database().reference();
     
+
     func addItem(_ item: AdminBookItem){
         let itemRef = database.child("items").child(item.id)
         itemRef.setValue(["bookname": item.bookname,"bookdescription":item.bookdescription,"Authorname" :item.Authorname, "bookurl" : item.bookurl, "isAvaialble " : item.isAvailable])
