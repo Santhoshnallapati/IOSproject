@@ -6,15 +6,15 @@
 //
 
 import Foundation
-
-struct AdminBookItem: Identifiable {
-    var id = UUID()
-    var bookname: String
-    var Authorname: String
-    var bookdescription: String
-    var bookurl: String
+struct AdminBookItem:Identifiable,Codable{
+    var id: String = UUID().uuidString
+    var bookname : String
+    var Authorname : String
+    var bookdescription : String
+    var bookurl : String
     var isAvailable: Bool = true
 }
+
 
 
 
