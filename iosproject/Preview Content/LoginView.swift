@@ -1,10 +1,11 @@
 import SwiftUI
 import FirebaseAuth
+import FirebaseDatabase
 
 struct LoginView: View {
     @Binding var isLoggedIn: Bool
     @Binding var isAdmin: Bool
-    @State private var username = ""
+    @State private var email = ""
     @State private var password = ""
     @State private var showAlert = false
     @State private var alertMessage = ""
@@ -13,7 +14,7 @@ struct LoginView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                Image(.libraryLogo)
+                Image("library_logo") // Ensure this matches your asset name
                     .resizable()
                     .frame(width: 250, height: 200)
                     .scaledToFit()
@@ -23,7 +24,7 @@ struct LoginView: View {
                     .padding()
 
                 VStack {
-                    TextField("Enter your Email", text: $username)
+                    TextField("Enter your Email", text: $email)
                         .padding()
                         .frame(width: 400, height: 50, alignment: .center)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -48,8 +49,9 @@ struct LoginView: View {
                     }
                     .padding()
 
-                    NavigationLink(destination: RegistrationView(isPresented: $showRegistrationView)) {
-                        Text("New to Library? Sign Up").padding()
+                    NavigationLink(destination: RegistrationView(isLoggedIn: $isLoggedIn, isAdmin: $isAdmin), isActive: $showRegistrationView) {
+                        Text("New to Library? Sign Up")
+                            .padding()
                     }
                     .padding()
                 }
@@ -59,41 +61,45 @@ struct LoginView: View {
     }
 
     private func login() {
-            print(" login with email: \(username)")
-            Auth.auth().signIn(withEmail: username, password: password) { authResult, error in
-                if let error = error {
-                    print("Login error: \(error.localizedDescription)")
-                    alertMessage = error.localizedDescription
-                    showAlert = true
-                    return
-                }
-                
-                // Successfully authenticated
-                if let user = authResult?.user {
-                    print("Login successful for user: \(user.email ?? "")")
-                    DispatchQueue.main.async {
-                        isLoggedIn = true
-                        checkAdminPrivileges(for: user)
-                    }
-                }
+        Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
+            if let error = error {
+                alertMessage = error.localizedDescription
+                showAlert = true
+                return
             }
-        }
-
-    private func checkAdminPrivileges(for user: User) {
-            let adminEmail = "Gaddamsubashreddy0519@gmail.com"
             
-            DispatchQueue.main.async {
-                if user.email == adminEmail {
-                    print("Admin privileges granted")
-                    isAdmin = true
-                } else {
-                    print("Regular user privileges granted")
-                    isAdmin = false
-                }
-                print("isLoggedIn: \(isLoggedIn), isAdmin: \(isAdmin)")
+            // Successfully authenticated
+            if let user = authResult?.user {
+                checkUserRole(for: user)
             }
         }
     }
+
+    private func checkUserRole(for user: User) {
+        let userRef = Database.database().reference().child("users").child(user.uid)
+        userRef.observeSingleEvent(of: .value) { snapshot in
+            guard let userData = snapshot.value as? [String: Any] else {
+                alertMessage = "Failed to retrieve user data"
+                showAlert = true
+                return
+            }
+            
+            if let role = userData["role"] as? String {
+                DispatchQueue.main.async {
+                    isLoggedIn = true
+                    isAdmin = (role == "Admin")
+                }
+            } else {
+                alertMessage = "Role not found"
+                showAlert = true
+            }
+        } withCancel: { error in
+            alertMessage = error.localizedDescription
+            showAlert = true
+        }
+    }
+}
+
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         LoginView(isLoggedIn: .constant(false), isAdmin: .constant(false))

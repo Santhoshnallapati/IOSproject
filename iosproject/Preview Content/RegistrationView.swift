@@ -3,6 +3,8 @@ import FirebaseAuth
 import FirebaseDatabase
 
 struct RegistrationView: View {
+    @Binding var isLoggedIn: Bool
+    @Binding var isAdmin: Bool
     @State private var email = ""
     @State private var password = ""
     @State private var confirmPassword = ""
@@ -12,75 +14,80 @@ struct RegistrationView: View {
     @State private var errorMessage = ""
     @State private var alertMessage = ""
     @State private var isShowingAlert = false
-    @Binding var isPresented: Bool
+    @State private var isAccountCreated = false
 
     let roles = ["User", "Admin"]
 
     var body: some View {
-        VStack {
-            Image("library_logo")
-                .resizable()
-                .frame(width:150, height: 150)
-                .scaledToFit()
+        NavigationView {
+            VStack {
+                Image("library_logo")
+                    .resizable()
+                    .frame(width: 150, height: 150)
+                    .scaledToFit()
 
-            Text("Sign Up")
-                .font(.largeTitle)
+            
+
+                TextField("First Name", text: $firstName)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+
+                TextField("Last Name", text: $lastName)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+
+                TextField("Email", text: $email)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .autocapitalization(.none)
+                    .padding()
+                    .textContentType(.emailAddress)
+
+                SecureField("Password", text: $password)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                    .textContentType(.newPassword)
+
+                SecureField("Confirm Password", text: $confirmPassword)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                    .textContentType(.newPassword)
+
+                Picker("Role", selection: $selectedRole) {
+                    ForEach(roles, id: \.self) { role in
+                        Text(role)
+                    }
+                }
+                .pickerStyle(SegmentedPickerStyle())
                 .padding()
 
-            TextField("First Name", text: $firstName)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
+                if !errorMessage.isEmpty {
+                    Text(errorMessage)
+                        .foregroundColor(.red)
+                        .padding()
+                }
 
-            TextField("Last Name", text: $lastName)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+                Button(action: {
+                    signUp()
+                }) {
+                    Text("Sign Up")
+                        .frame(minWidth: 0, maxWidth: .infinity)
+                        .padding()
+                        .background(Color.green)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                }
                 .padding()
+                .alert(isPresented: $isShowingAlert) {
+                    Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                }
 
-            TextField("Email", text: $email)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .autocapitalization(.none)
-                .padding()
-                .textContentType(.emailAddress)
-
-            SecureField("Password", text: $password)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-                .textContentType(.newPassword)
-
-            SecureField("Confirm Password", text: $confirmPassword)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-                .textContentType(.newPassword)
-
-            Picker("Role", selection: $selectedRole) {
-                ForEach(roles, id: \.self) { role in
-                    Text(role)
+                NavigationLink(destination: LoginView(isLoggedIn: $isLoggedIn, isAdmin: $isAdmin), isActive: $isAccountCreated) {
+                    EmptyView()
                 }
             }
-            .pickerStyle(SegmentedPickerStyle())
             .padding()
-
-            if !errorMessage.isEmpty {
-                Text(errorMessage)
-                    .foregroundColor(.red)
-                    .padding()
-            }
-
-            Button(action: {
-                signUp()
-            }) {
-                Text("Sign Up")
-                    .frame(minWidth: 0, maxWidth: .infinity)
-                    .padding()
-                    .background(Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-            }
-            .padding()
-            .alert(isPresented: $isShowingAlert) {
-                Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
-            }
+            .navigationTitle("Sign Up")
         }
-        .padding().navigationTitle("Sign Up")
     }
 
     private func signUp() {
@@ -112,9 +119,7 @@ struct RegistrationView: View {
                             alertMessage = error.localizedDescription
                             isShowingAlert = true
                         } else {
-                            isPresented = false
-                            alertMessage = "Account created successfully"
-                            isShowingAlert = true
+                            isAccountCreated = true
                             email = ""
                             password = ""
                             confirmPassword = ""
@@ -130,6 +135,6 @@ struct RegistrationView: View {
 
 struct RegistrationView_Previews: PreviewProvider {
     static var previews: some View {
-        RegistrationView(isPresented: .constant(true))
+        RegistrationView(isLoggedIn: .constant(false), isAdmin: .constant(false))
     }
 }
