@@ -16,7 +16,7 @@ struct UserDashboard: View {
         NavigationView {
             VStack {
                 List {
-                    ForEach(databaseManager.items) { item in
+                    ForEach(databaseManager.Books) { item in
                         VStack(alignment: .leading) {
                             Text(item.bookname).font(.headline)
                             Text(item.Authorname).font(.headline)

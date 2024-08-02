@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AdminDashboard: View {
     @StateObject private var databaseManager = DatabaseManager()
-    @State private var items:[AdminBookItem] = []
+    @State private var Books:[AdminBookItem] = []
     @State private var newItemName = ""
     @State private var newItemAuthor = ""
     @State private var newItemdescription = ""
@@ -21,7 +21,7 @@ struct AdminDashboard: View {
         NavigationView{
             VStack{
                 List{
-                    ForEach(items){ item in
+                    ForEach(Books){ item in
                         VStack(alignment : .leading){
                             
                             
@@ -67,7 +67,7 @@ struct AdminDashboard: View {
                 }
                 .onAppear{
                     databaseManager.fetchItem{ fetchItem in
-                        self.items = fetchItem
+                        self.Books = fetchItem
                          
                     }
                 }
@@ -109,10 +109,10 @@ struct AdminDashboard: View {
     
     private func deleteItems(at offsets : IndexSet){
         for index in offsets{
-            let item = items[index]
+            let item = Books[index]
             databaseManager.deleteItem(item)
         }
-        items.remove(atOffsets: offsets)
+        Books.remove(atOffsets: offsets)
     }
 }
 struct AdminDashboard_Previews: PreviewProvider {
