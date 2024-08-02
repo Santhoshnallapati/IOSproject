@@ -27,10 +27,22 @@ class DatabaseManager :ObservableObject{
           return role
       }
 
-    func addItem(_ item: AdminBookItem){
-        let itemRef = database.child("Books").child(item.id)
-        itemRef.setValue(["bookname": item.bookname,"bookdescription":item.bookdescription,"Authorname" :item.Authorname, "bookurl" : item.bookurl, "isAvaialble " : item.isAvailable])
-    }
+    func addItem(_ item: AdminBookItem, completion: @escaping (Bool) -> Void) {
+            guard userRole == "Admin" else {
+                completion(false)
+                return
+            }
+            
+            let itemRef = database.child("Books").child(item.id)
+            itemRef.setValue(["bookname": item.bookname,
+                              "bookdescription": item.bookdescription,
+                              "Authorname": item.Authorname,
+                              "bookurl": item.bookurl,
+                              "isAvailable": item.isAvailable]) { error, _ in
+                completion(error == nil)
+            }
+        }
+        
     
     func updateItem(_ item: AdminBookItem){
         let itemRef = database.child("Books").child(item.id)
