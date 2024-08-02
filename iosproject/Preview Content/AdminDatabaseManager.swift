@@ -5,6 +5,8 @@ class DatabaseManager: ObservableObject {
     
     @Published var Books: [AdminBookItem] = []
     private let database = Database.database().reference()
+    private let currentUserID = "currentUserID"
+    
     
     func addItem(_ item: AdminBookItem) {
         let itemRef = database.child("Books").child(item.id)
