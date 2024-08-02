@@ -9,7 +9,6 @@ import SwiftUI
 
 struct UserDashboard: View {
     @StateObject private var databaseManager = DatabaseManager()
-    @State private var items: [AdminBookItem] = []
     @State private var selectedItem: AdminBookItem?
     @State private var showingAlert = false
 
@@ -17,7 +16,7 @@ struct UserDashboard: View {
         NavigationView {
             VStack {
                 List {
-                    ForEach(items) { item in
+                    ForEach(databaseManager.items) { item in
                         VStack(alignment: .leading) {
                             Text(item.bookname).font(.headline)
                             Text(item.Authorname).font(.headline)
@@ -60,11 +59,6 @@ struct UserDashboard: View {
                         }
                     }
                 }
-                .onAppear {
-                    databaseManager.fetchItem { fetchItem in
-                        self.items = fetchItem
-                    }
-                }
                 .alert(isPresented: $showingAlert) {
                     Alert(
                         title: Text("Confirm Borrow"),
@@ -72,10 +66,6 @@ struct UserDashboard: View {
                         primaryButton: .default(Text("Yes")) {
                             if let item = selectedItem {
                                 databaseManager.borrowItem(item)
-                                // Refresh the items list
-                                databaseManager.fetchItem { fetchItem in
-                                    self.items = fetchItem
-                                }
                             }
                         },
                         secondaryButton: .cancel()

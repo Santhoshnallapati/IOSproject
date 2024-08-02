@@ -65,7 +65,7 @@ struct RegistrationView: View {
                 Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
             }
         }
-        .padding()
+        .padding().navigationTitle("LoginView")
     }
 
     private func signUp() {
@@ -91,9 +91,11 @@ struct RegistrationView: View {
                 
                 isPresented = false
                 alertMessage = "Account created successfully"
+               
                 email = ""
                 password = ""
                 confirmPassword = ""
+                
                 
             }
         }

@@ -43,9 +43,10 @@ class DatabaseManager :ObservableObject{
                    let bookname = value["bookname"] as? String,
                    let bookdescription = value["bookdescription"] as? String,
                     let Authorname = value["Authorname"] as? String,
-                    let bookurl = value["bookurl"] as? String ,
-                    let isAvailable = value["isAvailable"] as? Bool{
-                    let item = AdminBookItem(id: snapshot.key,bookname : bookname,Authorname: Authorname, bookdescription: bookdescription, bookurl: bookurl,isAvailable: <#T##Bool#>)
+                    let bookurl = value["bookurl"] as? String,
+                    let isAvailable = value["isAvailable"] as? Bool
+                {
+                    let item = AdminBookItem(id: snapshot.key,bookname : bookname,Authorname: Authorname, bookdescription: bookdescription, bookurl: bookurl,isAvailable: isAvailable)
                     items.append(item)
                 }
             }
