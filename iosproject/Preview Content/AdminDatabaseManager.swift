@@ -15,7 +15,7 @@ class DatabaseManager: ObservableObject {
                             "Authorname": item.Authorname,
                             "bookurl": item.bookurl,
                             "isAvailable": item.isAvailable,
-                            "borrowedByUserID": item.borrowedByUserID ?? ""]) { error, _ in
+                            "borrowedByUserID": item.borrowedUserID ?? ""]) { error, _ in
               if let error = error {
                   print("Error adding item: \(error.localizedDescription)")
               }
@@ -23,17 +23,18 @@ class DatabaseManager: ObservableObject {
       }
     
     func updateItem(_ item: AdminBookItem) {
-        let itemRef = database.child("Books").child(item.id)
-        itemRef.updateChildValues(["bookname": item.bookname,
-                                   "bookdescription": item.bookdescription,
-                                   "Authorname": item.Authorname,
-                                   "bookurl": item.bookurl,
-                                   "isAvailable": item.isAvailable]) { error, _ in
-            if let error = error {
-                print("Error updating item: \(error.localizedDescription)")
+            let itemRef = database.child("Books").child(item.id)
+            itemRef.updateChildValues(["bookname": item.bookname,
+                                       "bookdescription": item.bookdescription,
+                                       "Authorname": item.Authorname,
+                                       "bookurl": item.bookurl,
+                                       "isAvailable": item.isAvailable,
+                                       "borrowedByUserID": item.borrowedUserID ?? ""]) { error, _ in
+                if let error = error {
+                    print("Error updating item: \(error.localizedDescription)")
+                }
             }
         }
-    }
     
     func deleteItem(_ item: AdminBookItem) {
         let itemRef = database.child("Books").child(item.id)
