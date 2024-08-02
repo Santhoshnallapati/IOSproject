@@ -53,10 +53,12 @@ class DatabaseManager: ObservableObject {
        }
     
     func returnBook(_ item: AdminBookItem) {
-        var returnedItem = item
-        returnedItem.isAvailable = true
-        updateItem(returnedItem)
-    }
+           var returnedItem = item
+           returnedItem.isAvailable = true
+           returnedItem.borrowedUserID = nil
+           updateItem(returnedItem)
+       }
+       
     
     func fetchItem(completion: @escaping ([AdminBookItem]) -> Void) {
         database.child("Books").observe(.value) { snapshot in
