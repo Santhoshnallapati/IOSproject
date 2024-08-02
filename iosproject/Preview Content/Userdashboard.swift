@@ -1,16 +1,17 @@
 //
-//  Userdashboard.swift
+//  UserDashboard.swift
 //  iosproject
 //
-//  Created by Subash Gaddam on 2024-08-02.
+//  Created by Subash Gaddam on 2024-06-27.
 //
-
 
 import SwiftUI
 
-struct Userdashboard: View {
+struct UserDashboard: View {
     @StateObject private var databaseManager = DatabaseManager()
     @State private var items: [AdminBookItem] = []
+    @State private var selectedItem: AdminBookItem?
+    @State private var showingAlert = false
 
     var body: some View {
         NavigationView {
@@ -43,6 +44,19 @@ struct Userdashboard: View {
                                         .foregroundColor(.gray)
                                 }
                             }
+                            
+                            if item.isAvailable {
+                                Button("Borrow") {
+                                    selectedItem = item
+                                    showingAlert = true
+                                }
+                                .padding(.top, 5)
+                                .foregroundColor(.blue)
+                            } else {
+                                Text("Unavailable")
+                                    .foregroundColor(.red)
+                                    .padding(.top, 5)
+                            }
                         }
                     }
                 }
@@ -50,6 +64,22 @@ struct Userdashboard: View {
                     databaseManager.fetchItem { fetchItem in
                         self.items = fetchItem
                     }
+                }
+                .alert(isPresented: $showingAlert) {
+                    Alert(
+                        title: Text("Confirm Borrow"),
+                        message: Text("Do you want to borrow \(selectedItem?.bookname ?? "this book")?"),
+                        primaryButton: .default(Text("Yes")) {
+                            if let item = selectedItem {
+                                databaseManager.borrowItem(item)
+                                // Refresh the items list
+                                databaseManager.fetchItem { fetchItem in
+                                    self.items = fetchItem
+                                }
+                            }
+                        },
+                        secondaryButton: .cancel()
+                    )
                 }
             }
             .navigationTitle("Available Books")
@@ -59,6 +89,6 @@ struct Userdashboard: View {
 
 struct UserDashboard_Previews: PreviewProvider {
     static var previews: some View {
-        Userdashboard()
+        UserDashboard()
     }
 }
