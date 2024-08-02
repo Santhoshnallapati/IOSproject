@@ -28,6 +28,11 @@ class DatabaseManager :ObservableObject{
         let itemRef = database.child("items").child(item.id)
         itemRef.removeValue()
     }
+    func borrowItem(_ item: AdminBookItem) {
+            var borrowedItem = item
+            borrowedItem.isAvailable = false
+            updateItem(borrowedItem)
+        }
     
     func fetchItem(completion: @escaping(([AdminBookItem]) -> Void )){
         database.child("items").observe(.value){ snapShot in
@@ -38,8 +43,9 @@ class DatabaseManager :ObservableObject{
                    let bookname = value["bookname"] as? String,
                    let bookdescription = value["bookdescription"] as? String,
                     let Authorname = value["Authorname"] as? String,
-                    let bookurl = value["bookurl"] as? String {
-                    let item = AdminBookItem(id: snapshot.key,bookname : bookname,Authorname: Authorname, bookdescription: bookdescription, bookurl: bookurl)
+                    let bookurl = value["bookurl"] as? String ,
+                    let isAvailable = value["isAvailable"] as? Bool{
+                    let item = AdminBookItem(id: snapshot.key,bookname : bookname,Authorname: Authorname, bookdescription: bookdescription, bookurl: bookurl,isAvailable: <#T##Bool#>)
                     items.append(item)
                 }
             }
