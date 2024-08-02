@@ -7,13 +7,25 @@
 
 import Foundation
 import FirebaseDatabase
-
+import FirebaseAuth
 
 class DatabaseManager :ObservableObject{
     
     @Published var Books: [AdminBookItem] = []
         private let database = Database.database().reference()
         
+    private var userRole: String? {
+         
+          guard let userId = Auth.auth().currentUser?.uid else { return nil }
+          let roleRef = database.child("users").child(userId).child("role")
+          var role: String?
+          
+          roleRef.observeSingleEvent(of: .value) { snapshot in
+              role = snapshot.value as? String
+          }
+          
+          return role
+      }
 
     func addItem(_ item: AdminBookItem){
         let itemRef = database.child("Books").child(item.id)
