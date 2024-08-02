@@ -13,7 +13,7 @@ struct AdminBookItem:Identifiable,Codable{
     var bookdescription : String
     var bookurl : String
     var isAvailable: Bool = true
-    var borrowedByUserID: String? 
+    var borrowedUserID: String?
 }
 
 
