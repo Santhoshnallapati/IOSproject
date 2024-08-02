@@ -46,10 +46,11 @@ class DatabaseManager: ObservableObject {
     }
     
     func borrowItem(_ item: AdminBookItem) {
-        var borrowedItem = item
-        borrowedItem.isAvailable = false
-        updateItem(borrowedItem)
-    }
+           var borrowedItem = item
+           borrowedItem.isAvailable = false
+           borrowedItem.borrowedUserID = currentUserID
+           updateItem(borrowedItem)
+       }
     
     func returnBook(_ item: AdminBookItem) {
         var returnedItem = item
