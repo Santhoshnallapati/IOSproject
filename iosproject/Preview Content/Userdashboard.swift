@@ -31,7 +31,7 @@ struct UserDashboard: View {
                                     Image(systemName: "photo")
                                         .frame(width: 50, height: 50)
                                         .foregroundColor(.gray)
-                                @unknown default:
+                                 default:
                                     Image(systemName: "photo")
                                         .frame(width: 50, height: 50)
                                         .foregroundColor(.gray)
@@ -46,7 +46,7 @@ struct UserDashboard: View {
                                 }
                                 .padding(.top, 5)
                                 .foregroundColor(.blue)
-                            } else {
+                            } else if (item.borrowedUserID == databaseManager.users.currentUserID) {
                                 Button("Return") {
                                     selectedItem = item
                                     isReturning = true
@@ -55,6 +55,11 @@ struct UserDashboard: View {
                                 .padding(.top, 5)
                                 .foregroundColor(.green)
                             }
+                            else {
+                          Text("Unavailable")
+                                    .foregroundColor(.red)
+                                    .padding(.top, 5)
+                        }
                         }
                     }
                 }
