@@ -42,20 +42,21 @@ struct SplashView: View {
                     self.userRole = role
                 }
                 self.isLoggedIn = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    withAnimation {
-                        self.isActive = false
-                    }
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//                    withAnimation {
+//                        self.isActive = false
+//                    }
                 }
             }
-        } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                withAnimation {
-                    self.isActive = false
-                }
-            }
-        }
-    }
+        } 
+//    else {
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//                withAnimation {
+//                    self.isActive = false
+//                }
+//            }
+//        }
+  //  }
 }
 
 struct SplashView_Previews: PreviewProvider {

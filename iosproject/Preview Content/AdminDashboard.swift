@@ -100,6 +100,13 @@ struct AdminDashboard: View {
                     }
                 }
                 .padding()
+                NavigationLink(destination: Profilepage()) {
+                                  Text("Go to Profile")
+                                      .padding()
+                                      .background(Color.blue)
+                                      .foregroundColor(.white)
+                                      .cornerRadius(8)
+                              }
             }
             .navigationTitle("Books : ")
             .navigationBarItems(trailing: EditButton())
