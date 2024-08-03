@@ -46,15 +46,16 @@ struct UserDashboard: View {
                                 }
                                 .padding(.top, 5)
                                 .foregroundColor(.blue)
-                            } else if (item.borrowedUserID == databaseManager.users.currentUserID) {
-                                Button("Return") {
-                                    selectedItem = item
-                                    isReturning = true
-                                    showingAlert = true
-                                }
-                                .padding(.top, 5)
-                                .foregroundColor(.green)
                             }
+//                            else if item.borrowedUserID == databaseManager.users.UUID {
+//                                Button("Return") {
+//                                    selectedItem = item
+//                                    isReturning = true
+//                                    showingAlert = true
+//                                }
+//                                .padding(.top, 5)
+//                                .foregroundColor(.green)
+//                            }
                             else {
                           Text("Unavailable")
                                     .foregroundColor(.red)
