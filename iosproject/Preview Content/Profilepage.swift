@@ -8,6 +8,7 @@ struct Profilepage: View {
     @State private var profileEmail: String = ""
     @State private var profileRole: String = ""
     @State private var isLoggedIn: Bool = true
+    @State private var isAdmin: Bool = true
     @State private var showingLogoutAlert: Bool = false
     @Environment(\.presentationMode) var presentationMode
 
@@ -108,8 +109,15 @@ struct Profilepage: View {
     func logout() {
         do {
             try Auth.auth().signOut()
-            // Navigate to login page
-            self.isLoggedIn = false
+            isLoggedIn = false
+            NavigationLink(destination: LoginView(isLoggedIn: $isLoggedIn, isAdmin: $isAdmin)) {
+                              Text("Go to Profile")
+                                  .padding()
+                                  .background(Color.blue)
+                                  .foregroundColor(.white)
+                                  .cornerRadius(8)
+                          }
+          
         } catch {
             print("Error signing out: \(error.localizedDescription)")
         }
