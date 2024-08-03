@@ -4,42 +4,42 @@ import FirebaseDatabase
 class DatabaseManager: ObservableObject {
     
     @Published var Books: [AdminBookItem] = []
-    private let database = Database.database().reference()
-    private let currentUserID = "currentUserID"
+    private var database = Database.database().reference()
+    private var currentUserID = "currentUserID"
     
     
     func addItem(_ item: AdminBookItem) {
-          let itemRef = database.child("Books").child(item.id)
+          var itemRef = database.child("Books").child(item.id)
           itemRef.setValue(["bookname": item.bookname,
                             "bookdescription": item.bookdescription,
                             "Authorname": item.Authorname,
                             "bookurl": item.bookurl,
                             "isAvailable": item.isAvailable,
                             "borrowedByUserID": item.borrowedUserID ?? ""]) { error, _ in
-              if let error = error {
+              if var error = error {
                   print("Error adding item: \(error.localizedDescription)")
               }
           }
       }
     
     func updateItem(_ item: AdminBookItem) {
-            let itemRef = database.child("Books").child(item.id)
+            var itemRef = database.child("Books").child(item.id)
             itemRef.updateChildValues(["bookname": item.bookname,
                                        "bookdescription": item.bookdescription,
                                        "Authorname": item.Authorname,
                                        "bookurl": item.bookurl,
                                        "isAvailable": item.isAvailable,
                                        "borrowedByUserID": item.borrowedUserID ?? ""]) { error, _ in
-                if let error = error {
+                if var error = error {
                     print("Error updating item: \(error.localizedDescription)")
                 }
             }
         }
     
     func deleteItem(_ item: AdminBookItem) {
-        let itemRef = database.child("Books").child(item.id)
+        var itemRef = database.child("Books").child(item.id)
         itemRef.removeValue { error, _ in
-            if let error = error {
+            if var error = error {
                 print("Error deleting item: \(error.localizedDescription)")
             }
         }
