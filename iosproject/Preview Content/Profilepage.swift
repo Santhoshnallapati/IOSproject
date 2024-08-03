@@ -15,43 +15,44 @@ struct Profilepage: View {
     @State private var profileEmail: String = ""
     @State private var profileRole: String = ""
     @State  var isLoggedIn: Bool = true
-   
-    var body: some View {
-        if isLoggedIn {
-                        Text("Name: \(profileName)")
-                            .font(.system(size: 20, weight: .bold))
-                            .padding(.top, 16)
-
-                        Text("Email: \(profileEmail)")
-                            .font(.system(size: 16))
-                            .padding(.top, 8)
-
-                        Text("Role: \(profileRole)")
-                            .font(.system(size: 16))
-                            .padding(.top, 8)
-
-                        Button(action: {
-                            // Action for back button
-                            // Implement navigation to previous view or logout functionality
-                            self.isLoggedIn = false
-                        }) {
-                            Text("Back")
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(8)
-                        }
-                        .padding(.top, 16)
-                    } else {
-                        Text("Redirecting to login...")
-                    }
-    }
-        .padding(20)
-                .onAppear {
-                    fetchUserData()
-                }
     
+    var body: some View {
+            VStack(alignment: .leading, spacing: 16) {
+                if isLoggedIn {
+                    Text("Name: \(profileName)")
+                        .font(.system(size: 20, weight: .bold))
+                        .padding(.top, 16)
+
+                    Text("Email: \(profileEmail)")
+                        .font(.system(size: 16))
+                        .padding(.top, 8)
+
+                    Text("Role: \(profileRole)")
+                        .font(.system(size: 16))
+                        .padding(.top, 8)
+
+                    Button(action: {
+                        // Action for back button
+                        // Implement navigation to previous view or logout functionality
+                        self.isLoggedIn = false
+                    }) {
+                        Text("Back")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                    }
+                    .padding(.top, 16)
+                } else {
+                    Text("Redirecting to login...")
+                }
+            }
+            .padding(20)
+            .onAppear {
+                fetchUserData()
+            }
+        }
     func fetchUserData() {
         
          let database = Database.database().reference()
