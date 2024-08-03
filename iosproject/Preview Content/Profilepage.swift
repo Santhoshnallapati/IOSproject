@@ -6,10 +6,18 @@
 //
 
 import SwiftUI
+import Firebase
+import FirebaseAuth
+import FirebaseDatabase
 
 struct Profilepage: View {
+    @State private var profileName: String = ""
+    @State private var profileEmail: String = ""
+    @State private var profileRole: String = ""
+    @State private var isLoggedIn: Bool = true
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+       
+        
     }
 }
 
