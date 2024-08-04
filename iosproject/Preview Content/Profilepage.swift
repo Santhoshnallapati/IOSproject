@@ -10,8 +10,7 @@ struct Profilepage: View {
     @State private var isLoggedIn: Bool = true
     @State private var isAdmin: Bool = true
     @State private var showingLogoutAlert: Bool = false
-//    @State private var navigateToLogin: Bool = false
-    @Environment(\.presentationMode) var presentationMode
+    @State private var navigateToLogin: Bool = false
 
     var body: some View {
         NavigationStack {
@@ -51,18 +50,18 @@ struct Profilepage: View {
                         )
                     }
 
-                    NavigationLink(destination: DashboardView()) {
-                        Text("Back")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(8)
-                    }
-                    .padding(.top, 16)
+//                    NavigationLink(destination: DashboardView()) {
+//                        Text("Back")
+//                            .frame(maxWidth: .infinity)
+//                            .padding()
+//                            .background(Color.blue)
+//                            .foregroundColor(.white)
+//                            .cornerRadius(8)
+//                    }
+//                    .padding(.top, 16)
                 } else {
-                    NavigationLink(destination: LoginView(isLoggedIn: $isLoggedIn, isAdmin: $isAdmin)) {
-                        EmptyView()
+                    NavigationLink(destination: LoginView(isLoggedIn: $isLoggedIn, isAdmin: $isAdmin), isActive: $navigateToLogin) {
+                        
                     }
                 }
             }
@@ -113,16 +112,14 @@ struct Profilepage: View {
         do {
             try Auth.auth().signOut()
             isLoggedIn = false
-           // navigateToLogin = true
+            navigateToLogin = true
         } catch {
             print("Error signing out: \(error.localizedDescription)")
         }
     }
 }
 
-
-
-struct ProfileView_Previews: PreviewProvider {
+struct Profilepage_Previews: PreviewProvider {
     static var previews: some View {
         Profilepage()
     }
