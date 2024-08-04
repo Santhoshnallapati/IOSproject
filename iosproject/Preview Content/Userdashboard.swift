@@ -79,7 +79,14 @@ struct UserDashboard: View {
                         },
                         secondaryButton: .cancel()
                     )
-                }
+                }.padding()
+                 NavigationLink(destination: Profilepage()) {
+                                  Text("Go to Profile")
+                                      .padding()
+                                      .background(Color.blue)
+                                      .foregroundColor(.white)
+                                      .cornerRadius(8)
+                              }
             }
             .navigationTitle("Available Books")
             .onAppear {

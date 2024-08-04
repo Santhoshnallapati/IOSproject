@@ -50,14 +50,14 @@ struct Profilepage: View {
                         )
                     }
 
-                    NavigationLink(destination: DashboardView()) {
-                        Text("Back")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(8)
-                    }
+//                    NavigationLink(destination: DashboardView()) {
+//                        Text("Back")
+//                            .frame(maxWidth: .infinity)
+//                            .padding()
+//                            .background(Color.blue)
+//                            .foregroundColor(.white)
+//                            .cornerRadius(8)
+//                    }
                     .padding(.top, 16)
                 }
             }
