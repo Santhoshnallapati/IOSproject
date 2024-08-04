@@ -10,7 +10,7 @@ struct Profilepage: View {
     @State private var isLoggedIn: Bool = true
     @State private var isAdmin: Bool = true
     @State private var showingLogoutAlert: Bool = false
-    @State private var navigateToLogin: Bool = false
+    @State private var showingLoginView: Bool = false
 
     var body: some View {
         NavigationStack {
@@ -50,24 +50,23 @@ struct Profilepage: View {
                         )
                     }
 
-//                    NavigationLink(destination: DashboardView()) {
-//                        Text("Back")
-//                            .frame(maxWidth: .infinity)
-//                            .padding()
-//                            .background(Color.blue)
-//                            .foregroundColor(.white)
-//                            .cornerRadius(8)
-//                    }
-//                    .padding(.top, 16)
-                } else {
-                    NavigationLink(destination: LoginView(isLoggedIn: $isLoggedIn, isAdmin: $isAdmin), isActive: $navigateToLogin) {
-                        
+                    NavigationLink(destination: DashboardView()) {
+                        Text("Back")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
                     }
+                    .padding(.top, 16)
                 }
             }
             .padding(20)
             .onAppear {
                 fetchUserData()
+            }
+            .fullScreenCover(isPresented: $showingLoginView) {
+                LoginView(isLoggedIn: $isLoggedIn, isAdmin: $isAdmin)
             }
         }
     }
@@ -112,7 +111,7 @@ struct Profilepage: View {
         do {
             try Auth.auth().signOut()
             isLoggedIn = false
-            navigateToLogin = true
+            showingLoginView = true
         } catch {
             print("Error signing out: \(error.localizedDescription)")
         }
