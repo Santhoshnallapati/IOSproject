@@ -10,10 +10,11 @@ struct Profilepage: View {
     @State private var isLoggedIn: Bool = true
     @State private var isAdmin: Bool = true
     @State private var showingLogoutAlert: Bool = false
+    @State private var navigateToLogin: Bool = false
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(alignment: .leading, spacing: 16) {
                 if isLoggedIn {
                     Text("Name: \(profileName)")
@@ -59,8 +60,21 @@ struct Profilepage: View {
                             .cornerRadius(8)
                     }
                     .padding(.top, 16)
-                } else {
+                } 
+                else {
                     Text("Redirecting to login...")
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                self.navigateToLogin = true
+                            }
+                        }
+                        .background(
+                            NavigationLink(
+                                destination: LoginView(isLoggedIn: $isLoggedIn, isAdmin: $isAdmin),
+                                isActive: $navigateToLogin,
+                                label: { EmptyView() }
+                            )
+                        )
                 }
             }
             .padding(20)
@@ -76,11 +90,8 @@ struct Profilepage: View {
             self.isLoggedIn = false
             return
         }
-        
         let userEmail = currentUser.email
-        
         let ref = database.child("users")
-        
         ref.queryOrdered(byChild: "email").queryEqual(toValue: userEmail).observeSingleEvent(of: .value) { snapshot in
             if let userSnapshots = snapshot.children.allObjects as? [DataSnapshot] {
                 for userSnapshot in userSnapshots {
@@ -110,14 +121,7 @@ struct Profilepage: View {
         do {
             try Auth.auth().signOut()
             isLoggedIn = false
-            NavigationLink(destination: LoginView(isLoggedIn: $isLoggedIn, isAdmin: $isAdmin)) {
-                              Text("Go to Profile")
-                                  .padding()
-                                  .background(Color.blue)
-                                  .foregroundColor(.white)
-                                  .cornerRadius(8)
-                          }
-          
+            navigateToLogin = true
         } catch {
             print("Error signing out: \(error.localizedDescription)")
         }

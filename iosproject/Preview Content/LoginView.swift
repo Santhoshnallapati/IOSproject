@@ -90,7 +90,6 @@ struct LoginView: View {
                 return
             }
             
-            // Successfully authenticated
             if let user = authResult?.user {
                 checkUserRole(for: user)
             }
