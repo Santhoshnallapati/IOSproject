@@ -10,7 +10,7 @@ struct Profilepage: View {
     @State private var isLoggedIn: Bool = true
     @State private var isAdmin: Bool = true
     @State private var showingLogoutAlert: Bool = false
-    @State private var navigateToLogin: Bool = false
+//    @State private var navigateToLogin: Bool = false
     @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
@@ -60,21 +60,10 @@ struct Profilepage: View {
                             .cornerRadius(8)
                     }
                     .padding(.top, 16)
-                } 
-                else {
-                    Text("Redirecting to login...")
-                        .onAppear {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                self.navigateToLogin = true
-                            }
-                        }
-                        .background(
-                            NavigationLink(
-                                destination: LoginView(isLoggedIn: $isLoggedIn, isAdmin: $isAdmin),
-                                isActive: $navigateToLogin,
-                                label: { EmptyView() }
-                            )
-                        )
+                } else {
+                    NavigationLink(destination: LoginView(isLoggedIn: $isLoggedIn, isAdmin: $isAdmin)) {
+                        EmptyView()
+                    }
                 }
             }
             .padding(20)
@@ -90,8 +79,11 @@ struct Profilepage: View {
             self.isLoggedIn = false
             return
         }
+        
         let userEmail = currentUser.email
+        
         let ref = database.child("users")
+        
         ref.queryOrdered(byChild: "email").queryEqual(toValue: userEmail).observeSingleEvent(of: .value) { snapshot in
             if let userSnapshots = snapshot.children.allObjects as? [DataSnapshot] {
                 for userSnapshot in userSnapshots {
@@ -121,7 +113,7 @@ struct Profilepage: View {
         do {
             try Auth.auth().signOut()
             isLoggedIn = false
-            navigateToLogin = true
+           // navigateToLogin = true
         } catch {
             print("Error signing out: \(error.localizedDescription)")
         }

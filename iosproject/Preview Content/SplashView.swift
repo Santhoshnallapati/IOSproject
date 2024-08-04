@@ -10,7 +10,7 @@ struct SplashView: View {
 
     var body: some View {
         VStack {
-            Image("libraryLogo")
+            Image("library_logo")
                 .resizable()
                 .scaledToFit()
                 .foregroundColor(.blue)
