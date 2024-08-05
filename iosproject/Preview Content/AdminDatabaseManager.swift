@@ -29,60 +29,68 @@ class DatabaseManager: ObservableObject {
     
     
     func updateItem(_ item: AdminBookItem) {
-            var itemRef = database.child("Books").child(item.id)
-            itemRef.updateChildValues(["bookname": item.bookname,
-                                       "bookdescription": item.bookdescription,
-                                       "Authorname": item.Authorname,
-                                       "bookurl": item.bookurl,
-                                       "isAvailable": item.isAvailable,
-                                       "borrowedByUserID": item.borrowedUserID ?? ""]) { error, _ in
-                if var error = error {
-                    print("Error updating item: \(error.localizedDescription)")
-                }
-            }
-        }
-    
+          let itemRef = database.child("Books").child(item.id)
+          itemRef.updateChildValues([
+              "bookname": item.bookname,
+              "bookdescription": item.bookdescription,
+              "Authorname": item.Authorname,
+              "bookurl": item.bookurl,
+              "isAvailable": item.isAvailable,
+              "borrowedUserID": item.borrowedUserID ?? ""
+          ]) { error, _ in
+              if let error = error {
+                  print("Error updating item: \(error.localizedDescription)")
+              }
+          }
+      }
     
     func deleteItem(_ item: AdminBookItem) {
-        var itemRef = database.child("Books").child(item.id)
-        itemRef.removeValue { error, _ in
-            if var error = error {
-                print("Error deleting item: \(error.localizedDescription)")
+         let itemRef = database.child("Books").child(item.id)
+         itemRef.removeValue { error, _ in
+             if let error = error {
+                 print("Error deleting item: \(error.localizedDescription)")
+             }
+         }
+     }
+    func borrowItem(_ item: AdminBookItem) {
+        guard let userID = currentUserID else { return }
+        
+        var borrowedItem = item
+        borrowedItem.isAvailable = false
+        borrowedItem.borrowedUserID = userID
+        
+        let borrowedRef = database.child("borrowedBooks").child(userID).child(item.id)
+        borrowedRef.setValue([
+            "bookname": item.bookname,
+            "bookdescription": item.bookdescription,
+            "Authorname": item.Authorname,
+            "bookurl": item.bookurl,
+            "borrowedUserID": userID
+        ]) { error, _ in
+            if let error = error {
+                print("Error borrowing item: \(error.localizedDescription)")
             }
         }
+        
+        updateItem(borrowedItem)
     }
     
-    func borrowItem(_ item: AdminBookItem) {
-            var borrowedItem = item
-            borrowedItem.isAvailable = false
-            borrowedItem.borrowedUserID = currentUserID
-            updateItem(borrowedItem)
-            let userRef = database.child("BorrowedBooks").child(currentUserID).child(item.id)
-            userRef.setValue([
-                "bookname": item.bookname,
-                "Authorname": item.Authorname,
-                "bookdescription": item.bookdescription,
-                "bookurl": item.bookurl,
-                "borrowedDate": Date().timeIntervalSince1970
-            ]) { error, _ in
-                if let error = error {
-                    print("Error borrowing item: \(error.localizedDescription)")
-                }
-            }
-        }
-    
     func returnBook(_ item: AdminBookItem) {
-            var returnedItem = item
-            returnedItem.isAvailable = true
-            returnedItem.borrowedUserID = nil
-            updateItem(returnedItem)
-            let userRef = database.child("BorrowedBooks").child(currentUserID).child(item.id)
-            userRef.removeValue { error, _ in
-                if let error = error {
-                    print("Error returning item: \(error.localizedDescription)")
-                }
-            }
-        }
+          guard let userID = currentUserID else { return }
+          
+          var returnedItem = item
+          returnedItem.isAvailable = true
+          returnedItem.borrowedUserID = nil
+          
+          let borrowedRef = database.child("borrowedBooks").child(userID).child(item.id)
+          borrowedRef.removeValue { error, _ in
+              if let error = error {
+                  print("Error returning item: \(error.localizedDescription)")
+              }
+          }
+          
+          updateItem(returnedItem)
+      }
        
     
     func fetchItem(completion: @escaping ([AdminBookItem]) -> Void) {
