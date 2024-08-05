@@ -69,12 +69,18 @@ struct UserDashboard: View {
                         primaryButton: .default(Text(isReturning ? "Return" : "Borrow")) {
                             if let item = selectedItem {
                                 if isReturning {
-                                    databaseManager.returnBook(item)
-                                } else {
-                                    databaseManager.borrowItem(item)
+                                    databaseManager.returnBook(item){
+                                        databaseManager.fetchItem { books in
+                                            databaseManager.Books = books
+                                        }
+                                    }
                                 }
-                                databaseManager.fetchItem { books in
-                                    databaseManager.Books = books
+                                else {
+                                    databaseManager.borrowItem(item) {
+                                        databaseManager.fetchItem { books in
+                                            databaseManager.Books = books
+                                        }
+                                    }
                                 }
                             }
                         },
@@ -82,14 +88,14 @@ struct UserDashboard: View {
                     )
                 }
                 .padding()
-                
                 NavigationLink(destination: BorrowedBooksView()) {
-                                    Text("View Borrowed Books")
-                                        .padding()
-                                        .background(Color.blue)
-                                        .foregroundColor(.white)
-                                        .cornerRadius(8)
-                                }
+                                   Text("View Borrowed Books")
+                                       .padding()
+                                       .background(Color.blue)
+                                       .foregroundColor(.white)
+                                       .cornerRadius(8)
+                               }
+                
                 NavigationLink(destination: Profilepage()) {
                     Text("Go to Profile")
                         .padding()
