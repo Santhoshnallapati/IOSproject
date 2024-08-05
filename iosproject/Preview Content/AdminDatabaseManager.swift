@@ -7,7 +7,7 @@ class DatabaseManager: ObservableObject {
     @Published var Books: [AdminBookItem] = []
     private var database = Database.database().reference()
     
-    private var currentUserID: String? {
+     var currentUserID: String? {
            Auth.auth().currentUser?.uid
        }
 
@@ -59,7 +59,7 @@ class DatabaseManager: ObservableObject {
         borrowedItem.isAvailable = false
         borrowedItem.borrowedUserID = userID
         
-        let borrowedRef = database.child("borrowedBooks").child(userID).child(item.id)
+        let borrowedRef = database.child("BorrowedBooks").child(userID).child(item.id)
         borrowedRef.setValue([
             "bookname": item.bookname,
             "bookdescription": item.bookdescription,
@@ -82,7 +82,7 @@ class DatabaseManager: ObservableObject {
           returnedItem.isAvailable = true
           returnedItem.borrowedUserID = nil
           
-          let borrowedRef = database.child("borrowedBooks").child(userID).child(item.id)
+          let borrowedRef = database.child("BorrowedBooks").child(userID).child(item.id)
           borrowedRef.removeValue { error, _ in
               if let error = error {
                   print("Error returning item: \(error.localizedDescription)")
