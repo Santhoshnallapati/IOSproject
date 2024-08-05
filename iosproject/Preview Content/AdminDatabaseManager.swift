@@ -64,7 +64,7 @@ class DatabaseManager: ObservableObject {
                 "borrowedUserID": borrowedItem.borrowedUserID ?? ""
             ]) { error, _ in
                 if error == nil {
-                    self.database.child("borrowedBooks").child(userID).child(item.id).setValue([
+                    self.database.child("BorrowedBooks").child(userID).child(item.id).setValue([
                         "bookname": item.bookname,
                         "bookdescription": item.bookdescription,
                         "Authorname": item.Authorname,
@@ -80,7 +80,9 @@ class DatabaseManager: ObservableObject {
         }
 
         func returnBook(_ item: AdminBookItem, completion: @escaping () -> Void) {
-            guard let userID = currentUserID else { return }
+            guard let userID = currentUserID else {
+                return
+            }
             var returnedItem = item
             returnedItem.isAvailable = true
             returnedItem.borrowedUserID = nil
@@ -90,7 +92,7 @@ class DatabaseManager: ObservableObject {
                 "borrowedUserID": NSNull()
             ]) { error, _ in
                 if error == nil {
-                    self.database.child("borrowedBooks").child(userID).child(item.id).removeValue { error, _ in
+                    self.database.child("BorrowedBooks").child(userID).child(item.id).removeValue { error, _ in
                         if error == nil {
                             completion()
                         }
@@ -100,8 +102,10 @@ class DatabaseManager: ObservableObject {
         }
     
     func fetchBorrowedBooks(completion: @escaping ([AdminBookItem]) -> Void) {
-            guard let userID = currentUserID else { return }
-            database.child("borrowedBooks").child(userID).observeSingleEvent(of: .value) { snapshot in
+            guard let userID = currentUserID else { 
+                return
+            }
+            database.child("BorrowedBooks").child(userID).observeSingleEvent(of: .value) { snapshot in
                 var books: [AdminBookItem] = []
                 for child in snapshot.children {
                     if let snapshot = child as? DataSnapshot,
