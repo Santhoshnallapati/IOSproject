@@ -106,13 +106,15 @@ class DatabaseManager: ObservableObject {
                       let isAvailable = value["isAvailable"] as? Bool {
                        
                        let borrowedUserID = value["borrowedUserID"] as? String
-                       let item = AdminBookItem(id: snapshot.key,
-                                                bookname: bookname,
-                                                Authorname: Authorname,
-                                                bookdescription: bookdescription,
-                                                bookurl: bookurl,
-                                                isAvailable: isAvailable,
-                                                borrowedUserID: borrowedUserID)
+                       let item = AdminBookItem(
+                           id: snapshot.key,
+                           bookname: bookname,
+                           Authorname: Authorname,
+                           bookdescription: bookdescription,
+                           bookurl: bookurl,
+                           isAvailable: isAvailable,
+                           borrowedUserID: borrowedUserID
+                       )
                        books.append(item)
                    }
                }
@@ -120,4 +122,3 @@ class DatabaseManager: ObservableObject {
            }
        }
    }
-    
