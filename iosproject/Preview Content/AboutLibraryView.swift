@@ -10,10 +10,10 @@ import SwiftUI
 struct AboutLibraryView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
-            Text("About Library")
-                .font(.largeTitle)
+            Text("Overview")
+                .font(.headline)
                 .fontWeight(.bold)
-                .padding(10).background(.gray)
+                .padding(10)
 
             Text("library offer a wide range of books from various genres and authors. Our mission is to foster a love of reading and provide a community space for learning and growth.")
                 .foregroundColor(.gray)

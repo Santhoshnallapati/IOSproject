@@ -89,13 +89,7 @@ struct UserDashboard: View {
                 }
                 .padding()
                 HStack{
-                    NavigationLink(destination: BorrowedBooksView()) {
-                        Text("View Borrowed Books")
-                            .padding()
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(6)
-                    }
+                    
                     NavigationLink(destination: AboutLibraryView()) {
                         Text("About Library")
                             .padding()
@@ -103,6 +97,14 @@ struct UserDashboard: View {
                             .foregroundColor(.white)
                             .cornerRadius(6)
                     }
+                    NavigationLink(destination: BorrowedBooksView()) {
+                        Text("View Borrowed Books")
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(6)
+                    }
+                    
                 }
                 
             }
