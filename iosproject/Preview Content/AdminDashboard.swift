@@ -100,13 +100,27 @@ struct AdminDashboard: View {
                     }
                 }
                 .padding()
-                NavigationLink(destination: Profilepage()) {
-                                  Text("Go to Profile")
-                                      .padding()
-                                      .background(Color.blue)
-                                      .foregroundColor(.white)
-                                      .cornerRadius(8)
-                              }
+            
+                
+                HStack{
+                    NavigationLink(destination: Profilepage()) {
+                                      Text("Go to Profile")
+                                          .padding()
+                                          .background(Color.blue)
+                                          .foregroundColor(.white)
+                                          .cornerRadius(8)
+                                  }
+                    NavigationLink(destination: AboutLibraryView()) {
+                        Text("About Library")
+                            .padding()
+                            .background(Color.gray)
+                            .foregroundColor(.white)
+                            .cornerRadius(6)
+                    }
+
+                    
+                }
+                
             }
             .navigationTitle("Books : ")
             .navigationBarItems(trailing: EditButton())
