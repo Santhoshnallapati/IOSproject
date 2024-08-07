@@ -56,8 +56,8 @@ struct Profilepage: View {
             .padding(20)
             HStack{
                 
-                NavigationLink(destination: Profilepage()) {
-                    Text("Go to Profile")
+                NavigationLink(destination: UserDashboard()) {
+                    Text("Available books")
                         .padding()
                         .background(Color.blue)
                         .foregroundColor(.white)

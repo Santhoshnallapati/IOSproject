@@ -20,9 +20,7 @@ struct LoginView: View {
                     .frame(width: 250, height: 200)
                     .scaledToFit()
 
-                Text("Login")
-                    .font(.largeTitle)
-                    .padding()
+              
 
                 VStack {
                     TextField("Enter your Email", text: $email)
@@ -37,6 +35,14 @@ struct LoginView: View {
                         .textContentType(.password)
 
                     Button(action: {
+                    sendPasswordReset()
+                            }) {
+                    Text("Forgot Password?")
+                    .foregroundColor(.blue)
+                    }
+                    .padding()
+                    
+                    Button(action: {
                         login()
                     }) {
                         Text("Login")
@@ -49,6 +55,7 @@ struct LoginView: View {
                         Alert(title: Text("Login Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
                     }
                     .padding()
+                    
 
                     NavigationLink(destination: RegistrationView(isLoggedIn: $isLoggedIn, isAdmin: $isAdmin), isActive: $showRegistrationView) {
                         Text("New to Library? Sign Up")
@@ -120,7 +127,24 @@ struct LoginView: View {
             showAlert = true
         }
     }
-}
+    private func sendPasswordReset() {
+          guard !email.isEmpty else {
+              alertMessage = "Please enter your email address."
+              showAlert = true
+              return
+          }
+
+          Auth.auth().sendPasswordReset(withEmail: email) { error in
+              if let error = error {
+                  alertMessage = error.localizedDescription
+              } else {
+                  alertMessage = "Password reset email sent."
+              }
+              showAlert = true
+          }
+      }
+  }
+
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {

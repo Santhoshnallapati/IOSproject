@@ -10,7 +10,12 @@ struct BorrowedBooksView: View {
                     Text(item.bookname).font(.headline)
                     Text(item.Authorname).font(.subheadline)
                     Text(item.bookdescription).font(.body)
-                    
+//    if let borrowDate = item.borrowDate
+//                    {
+//Text("Borrowed on: \(borrowDate, formatter: DateFormatter.shortDate)")
+//        .font(.caption)
+//                            }
+                                       
                     AsyncImage(url: URL(string: item.bookurl)) { phase in
                         switch phase {
                         case .empty:
@@ -32,6 +37,11 @@ struct BorrowedBooksView: View {
                                 .foregroundColor(.gray)
                         }
                     }
+            if let borrowDate = item.borrowDate {
+                Text("Borrowed on: \(borrowDate, formatter: DateFormatter.shortDate)")
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+                                      }
                     
                     Button("Return") {
                         databaseManager.returnBook(item) {
@@ -77,5 +87,13 @@ struct BorrowedBooksView: View {
 struct BorrowedBooksView_Previews: PreviewProvider {
     static var previews: some View {
         BorrowedBooksView()
+    }
+}
+
+extension DateFormatter {
+    static var shortDate: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        return formatter
     }
 }

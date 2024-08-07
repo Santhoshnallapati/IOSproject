@@ -20,7 +20,8 @@ class DatabaseManager: ObservableObject {
                "Authorname": item.Authorname,
                "bookurl": item.bookurl,
                "isAvailable": item.isAvailable,
-               "borrowedUserID": item.borrowedUserID ?? ""
+               "borrowedUserID": item.borrowedUserID ?? "",
+               "borrowDate": item.borrowDate?.timeIntervalSince1970 ?? NSNull()
            ]) { error, _ in
                if let error = error {
                    print("Error adding item: \(error.localizedDescription)")
@@ -37,7 +38,8 @@ class DatabaseManager: ObservableObject {
               "Authorname": item.Authorname,
               "bookurl": item.bookurl,
               "isAvailable": item.isAvailable,
-              "borrowedUserID": item.borrowedUserID ?? ""
+              "borrowedUserID": item.borrowedUserID ?? "",
+              "borrowDate": item.borrowDate?.timeIntervalSince1970 ?? NSNull()
           ]) { error, _ in
               if let error = error {
                   print("Error updating item: \(error.localizedDescription)")
@@ -58,10 +60,12 @@ class DatabaseManager: ObservableObject {
             var borrowedItem = item
             borrowedItem.isAvailable = false
             borrowedItem.borrowedUserID = userID
+            borrowedItem.borrowDate = Date()
             
             database.child("Books").child(item.id).updateChildValues([
                 "isAvailable": borrowedItem.isAvailable,
-                "borrowedUserID": borrowedItem.borrowedUserID ?? ""
+                "borrowedUserID": borrowedItem.borrowedUserID ?? "",
+                "borrowDate": borrowedItem.borrowDate?.timeIntervalSince1970 ?? NSNull()
             ]) { error, _ in
                 if error == nil {
                     self.database.child("BorrowedBooks").child(userID).child(item.id).setValue([
@@ -69,7 +73,8 @@ class DatabaseManager: ObservableObject {
                         "bookdescription": item.bookdescription,
                         "Authorname": item.Authorname,
                         "bookurl": item.bookurl,
-                        "borrowedUserID": userID
+                        "borrowedUserID": userID,
+                        "borrowDate": borrowedItem.borrowDate?.timeIntervalSince1970 ?? NSNull()
                     ]) { error, _ in
                         if error == nil {
                             completion()
@@ -86,10 +91,13 @@ class DatabaseManager: ObservableObject {
             var returnedItem = item
             returnedItem.isAvailable = true
             returnedItem.borrowedUserID = nil
+            returnedItem.borrowDate = nil
             
             database.child("Books").child(item.id).updateChildValues([
                 "isAvailable": returnedItem.isAvailable,
-                "borrowedUserID": NSNull()
+                "borrowedUserID": NSNull(),
+                "borrowDate": NSNull()
+                
             ]) { error, _ in
                 if error == nil {
                     self.database.child("BorrowedBooks").child(userID).child(item.id).removeValue { error, _ in
@@ -114,7 +122,8 @@ class DatabaseManager: ObservableObject {
                        let bookdescription = value["bookdescription"] as? String,
                        let Authorname = value["Authorname"] as? String,
                        let bookurl = value["bookurl"] as? String,
-                       let borrowedUserID = value["borrowedUserID"] as? String {
+                       let borrowedUserID = value["borrowedUserID"] as? String,
+                       let borrowDate = (value["borrowDate"] as? TimeInterval).flatMap { Date(timeIntervalSince1970: $0) }{
                         
                         let item = AdminBookItem(id: snapshot.key,
                                                  bookname: bookname,
@@ -122,7 +131,8 @@ class DatabaseManager: ObservableObject {
                                                  bookdescription: bookdescription,
                                                  bookurl: bookurl,
                                                  isAvailable: false,
-                                                 borrowedUserID: borrowedUserID)
+                                                 borrowedUserID: borrowedUserID,
+                                                 borrowDate: borrowDate)
                         books.append(item)
                     }
                 }
@@ -141,9 +151,13 @@ class DatabaseManager: ObservableObject {
                       let bookdescription = value["bookdescription"] as? String,
                       let Authorname = value["Authorname"] as? String,
                       let bookurl = value["bookurl"] as? String,
-                      let isAvailable = value["isAvailable"] as? Bool {
+                      let isAvailable = value["isAvailable"] as? Bool
+                   {
+                      let borrowedUserID = value["borrowedUserID"] as? String
+                      let borrowDate = (value["borrowDate"] as? TimeInterval).flatMap { Date(timeIntervalSince1970: $0)
+                      }
                        
-                       let borrowedUserID = value["borrowedUserID"] as? String
+                       
                        let item = AdminBookItem(
                            id: snapshot.key,
                            bookname: bookname,
@@ -151,7 +165,8 @@ class DatabaseManager: ObservableObject {
                            bookdescription: bookdescription,
                            bookurl: bookurl,
                            isAvailable: isAvailable,
-                           borrowedUserID: borrowedUserID
+                           borrowedUserID: borrowedUserID,
+                           borrowDate: borrowDate
                        )
                        books.append(item)
                    }
