@@ -6,6 +6,7 @@ struct UserDashboard: View {
     @State private var selectedItem: AdminBookItem?
     @State private var showingAlert = false
     @State private var isReturning = false
+
     private var currentUserID = Auth.auth().currentUser?.uid ?? ""
 
     var body: some View {
@@ -32,7 +33,7 @@ struct UserDashboard: View {
                                 Image(systemName: "photo")
                                     .frame(width: 50, height: 50)
                                     .foregroundColor(.gray)
-                             default:
+                            default:
                                 Image(systemName: "photo")
                                     .frame(width: 50, height: 50)
                                     .foregroundColor(.gray)
@@ -47,45 +48,62 @@ struct UserDashboard: View {
                             }
                             .padding(.top, 5)
                             .foregroundColor(.blue)
-                        } else if item.borrowedUserID == currentUserID {
-                            Button("Return") {
+                        } 
+                        //                        else if item.borrowedUserID == currentUserID {
+                        //                            Button("Return") {
+                        //                                selectedItem = item
+                        //                                isReturning = true
+                        //                                showingAlert = true
+                        //                            }
+                        //                            .padding(.top, 5)
+                        //                            .foregroundColor(.green)
+                        //                        } 
+                        else 
+                        {
+                            Button("Unavailable")
+                            {
                                 selectedItem = item
-                                isReturning = true
                                 showingAlert = true
+                                isReturning = false
                             }
                             .padding(.top, 5)
-                            .foregroundColor(.green)
-                        } else {
-                            Text("Unavailable")
-                                .foregroundColor(.red)
-                                .padding(.top, 5)
+                            .foregroundColor(.red)
                         }
                     }
                 }
                 .alert(isPresented: $showingAlert) {
-                    Alert(
-                        title: Text(isReturning ? "Confirm Return" : "Confirm Borrow"),
-                        message: Text(isReturning ? "Do you want to return \(selectedItem?.bookname ?? "this book")?" : "Do you want to borrow \(selectedItem?.bookname ?? "this book")?"),
-                        primaryButton: .default(Text(isReturning ? "Return" : "Borrow")) {
-                            if let item = selectedItem {
-                                if isReturning {
-                                    databaseManager.returnBook(item){
+                    if isReturning {
+                        return Alert(
+                            title: Text("Confirm Return"),
+                            message: Text("Do you want to return \(selectedItem?.bookname ?? "this book")?"),
+                            primaryButton: .default(Text("Return")) {
+                                if let item = selectedItem {
+                                    databaseManager.returnBook(item) {
                                         databaseManager.fetchItem { books in
                                             databaseManager.Books = books
                                         }
                                     }
                                 }
-                                else {
+                            },
+                            secondaryButton: .cancel()
+                        )
+                    } else
+                    {
+                        return Alert(
+                            title: Text(selectedItem?.isAvailable == true ? "Confirm Borrow" : "Unavailable"),
+                            message: Text(selectedItem?.isAvailable == true ? "Do you want to borrow \(selectedItem?.bookname ?? "this book")?" : "\(selectedItem?.bookname ?? "This book") is not available to borrow."),
+                            primaryButton: .default(Text(selectedItem?.isAvailable == true ? "Borrow" : "OK")) {
+                                if let item = selectedItem, selectedItem?.isAvailable == true {
                                     databaseManager.borrowItem(item) {
                                         databaseManager.fetchItem { books in
                                             databaseManager.Books = books
                                         }
                                     }
                                 }
-                            }
-                        },
-                        secondaryButton: .cancel()
-                    )
+                            },
+                            secondaryButton: .cancel()
+                        )
+                    }
                 }
                 .padding()
                 HStack{
@@ -112,10 +130,7 @@ struct UserDashboard: View {
                             .foregroundColor(.white)
                             .cornerRadius(8)
                     }
-
-                    
                 }
-                
             }
             .navigationTitle("Available Books")
             .onAppear {
