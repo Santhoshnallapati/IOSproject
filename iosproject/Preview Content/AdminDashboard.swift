@@ -16,6 +16,8 @@ struct AdminDashboard: View {
     @State private var newItemurl = ""
     @State private var isEditeMode = false
     @State private var selectedItem : AdminBookItem?
+    @State private var showAlert = false
+    @State private var alertMessage = ""
     
     var body: some View {
         NavigationView{
@@ -23,8 +25,7 @@ struct AdminDashboard: View {
                 List{
                     ForEach(Books){ item in
                         VStack(alignment : .leading){
-                            
-                            
+
                             Text(item.bookname).font(.headline)
                             Text(item.Authorname).font(.headline)
                             Text(item.bookdescription).font(.subheadline)
@@ -81,13 +82,12 @@ struct AdminDashboard: View {
                    TextField("ImageURL",text: $newItemurl)
                     
                     Button(isEditeMode ? "Update" : "Add"){
-                        if isEditeMode, let item = selectedItem {
-                            if(item.bookname.isEmpty || item.bookdescription.isEmpty || item.Authorname.isEmpty||item.bookurl.isEmpty){
-                                Alert(
-                                    title: Text("Empty feilds alert"),
-                                    message: Text("All feilds are manadatary please enter"))
-                            }
-                            else {
+                        if newItemName.isEmpty || newItemdescription.isEmpty || newItemAuthor.isEmpty || newItemurl.isEmpty {
+                            alertMessage = "All fields are mandatory. Please fill in all fields."
+                            showAlert = true
+                        }
+                        else{
+                            if isEditeMode, let item = selectedItem {
                                 var updateditem = item
                                 updateditem.bookname = newItemName
                                 updateditem.bookdescription = newItemdescription
@@ -96,17 +96,22 @@ struct AdminDashboard: View {
                                 databaseManager.updateItem(updateditem)
                                 isEditeMode = false
                             }
-                        }else{
                             
-                            let newItem = AdminBookItem(bookname: newItemName, Authorname:  newItemAuthor, bookdescription: newItemdescription,bookurl:newItemurl)
-                          databaseManager.addItem(newItem)
+                            else{
+                                
+                                let newItem = AdminBookItem(bookname: newItemName, Authorname:  newItemAuthor, bookdescription: newItemdescription,bookurl:newItemurl)
+                                databaseManager.addItem(newItem)
+                            }
+                            newItemName = ""
+                            newItemdescription = ""
+                            newItemAuthor = ""
+                            newItemurl = ""
+                            selectedItem = nil
                         }
-                        newItemName = ""
-                        newItemdescription = ""
-                        newItemAuthor = ""
-                        newItemurl = ""
-                        selectedItem = nil
                     }
+                    .alert(isPresented: $showAlert) {
+                Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                                        }
                 }
                 .padding()
             
