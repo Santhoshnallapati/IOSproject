@@ -62,7 +62,7 @@ struct BorrowedBooksView: View {
             NavigationLink(destination: AboutLibraryView()) {
                 Text("About Library")
                     .padding()
-                    .background(Color.gray)
+                    .background(Color.blue)
                     .foregroundColor(.white)
                     .cornerRadius(6)
             }

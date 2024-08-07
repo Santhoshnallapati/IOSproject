@@ -98,12 +98,21 @@ struct UserDashboard: View {
                             .cornerRadius(6)
                     }
                     NavigationLink(destination: BorrowedBooksView()) {
-                        Text("View Borrowed Books")
+                        Text(" Borrowed Books")
                             .padding()
                             .background(Color.blue)
                             .foregroundColor(.white)
                             .cornerRadius(6)
                     }
+                    
+                    NavigationLink(destination: Profilepage()) {
+                        Text("Go to Profile")
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                    }
+
                     
                 }
                 

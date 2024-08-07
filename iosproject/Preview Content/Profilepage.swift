@@ -54,6 +54,26 @@ struct Profilepage: View {
                 }
             }
             .padding(20)
+            HStack{
+                
+                NavigationLink(destination: Profilepage()) {
+                    Text("Go to Profile")
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                }
+                NavigationLink(destination: AboutLibraryView()) {
+                    Text("About Library")
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(6)
+                }
+                
+                
+               
+            }
             .onAppear {
                 fetchUserData()
             }
