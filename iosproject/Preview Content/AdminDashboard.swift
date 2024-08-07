@@ -72,7 +72,8 @@ struct AdminDashboard: View {
                     }
                 }
                 
-                HStack{
+                VStack{
+                    
                     TextField("bookName",text: $newItemName)
                         .padding()
                     TextField("Description",text: $newItemdescription)
@@ -81,14 +82,22 @@ struct AdminDashboard: View {
                     
                     Button(isEditeMode ? "Update" : "Add"){
                         if isEditeMode, let item = selectedItem {
-                            var updateditem = item
-                            updateditem.bookname = newItemName
-                            updateditem.bookdescription = newItemdescription
-                            updateditem.Authorname = newItemAuthor
-                            updateditem.bookurl = newItemurl
-                            databaseManager.updateItem(updateditem)
-                            isEditeMode = false
+                            if(item.bookname.isEmpty || item.bookdescription.isEmpty || item.Authorname.isEmpty||item.bookurl.isEmpty){
+                                Alert(
+                                    title: Text("Empty feilds alert"),
+                                    message: Text("All feilds are manadatary please enter"))
+                            }
+                            else {
+                                var updateditem = item
+                                updateditem.bookname = newItemName
+                                updateditem.bookdescription = newItemdescription
+                                updateditem.Authorname = newItemAuthor
+                                updateditem.bookurl = newItemurl
+                                databaseManager.updateItem(updateditem)
+                                isEditeMode = false
+                            }
                         }else{
+                            
                             let newItem = AdminBookItem(bookname: newItemName, Authorname:  newItemAuthor, bookdescription: newItemdescription,bookurl:newItemurl)
                           databaseManager.addItem(newItem)
                         }
