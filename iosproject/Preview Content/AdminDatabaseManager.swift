@@ -174,4 +174,41 @@ class DatabaseManager: ObservableObject {
                completion(books)
            }
        }
+    func fetchAllBorrowedBooks(completion: @escaping ([BorrowedBookDetail]) -> Void) {
+        database.child("BorrowedBooks").observeSingleEvent(of: .value) { snapshot in
+            var borrowedBooks: [BorrowedBookDetail] = []
+            
+            for child in snapshot.children {
+                if let userSnapshot = child as? DataSnapshot {
+                    let userID = userSnapshot.key
+                    
+                    for bookChild in userSnapshot.children {
+                        if let bookSnapshot = bookChild as? DataSnapshot,
+                           let bookData = bookSnapshot.value as? [String: Any],
+                           let bookname = bookData["bookname"] as? String,
+                           let bookdescription = bookData["bookdescription"] as? String,
+                           let Authorname = bookData["Authorname"] as? String,
+                           let bookurl = bookData["bookurl"] as? String,
+                           let borrowDate = (bookData["borrowDate"] as? TimeInterval).flatMap { Date(timeIntervalSince1970: $0) } {
+                            
+                            let borrowedBookDetail = BorrowedBookDetail(
+                                userID: userID,
+                               
+                                bookID: bookSnapshot.key,
+                                bookname: bookname,
+                                Authorname: Authorname,
+                                bookdescription: bookdescription,
+                                bookurl: bookurl,
+                                borrowDate: borrowDate
+                            )
+                            borrowedBooks.append(borrowedBookDetail)
+                        }
+                    }
+                }
+            }
+            
+            completion(borrowedBooks)
+        }
+    }
+
    }

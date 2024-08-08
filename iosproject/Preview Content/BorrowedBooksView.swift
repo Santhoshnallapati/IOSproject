@@ -15,7 +15,6 @@ struct BorrowedBooksView: View {
 //Text("Borrowed on: \(borrowDate, formatter: DateFormatter.shortDate)")
 //        .font(.caption)
 //                            }
-                                       
                     AsyncImage(url: URL(string: item.bookurl)) { phase in
                         switch phase {
                         case .empty:

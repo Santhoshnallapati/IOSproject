@@ -20,6 +20,8 @@
 		5566E1672C2B875C0012D5F7 /* library_logo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5566E1662C2B875C0012D5F7 /* library_logo.jpg */; };
 		5F2EFA3C2C60904400CE3D5E /* BorrowedBooksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2EFA3B2C60904400CE3D5E /* BorrowedBooksView.swift */; };
 		5F42CD1C2C631DF20037E2A9 /* AboutLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F42CD1B2C631DF20037E2A9 /* AboutLibraryView.swift */; };
+		5F42CD1E2C654E640037E2A9 /* Borrowedbooksdetailsview_ForAdmin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F42CD1D2C654E640037E2A9 /* Borrowedbooksdetailsview_ForAdmin.swift */; };
+		5F42CD202C65544B0037E2A9 /* BorrowedBookDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F42CD1F2C65544B0037E2A9 /* BorrowedBookDetails.swift */; };
 		5F832C8B2C2DDAD1008D1967 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5F832C8A2C2DDAD1008D1967 /* GoogleService-Info.plist */; };
 		5F832C8D2C2DDDE8008D1967 /* AdminDashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F832C8C2C2DDDE8008D1967 /* AdminDashboard.swift */; };
 		5F832C8F2C2DDE0F008D1967 /* AdminBookItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F832C8E2C2DDE0F008D1967 /* AdminBookItem.swift */; };
@@ -41,6 +43,8 @@
 		5566E1662C2B875C0012D5F7 /* library_logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = library_logo.jpg; sourceTree = "<group>"; };
 		5F2EFA3B2C60904400CE3D5E /* BorrowedBooksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorrowedBooksView.swift; sourceTree = "<group>"; };
 		5F42CD1B2C631DF20037E2A9 /* AboutLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutLibraryView.swift; sourceTree = "<group>"; };
+		5F42CD1D2C654E640037E2A9 /* Borrowedbooksdetailsview_ForAdmin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Borrowedbooksdetailsview_ForAdmin.swift; sourceTree = "<group>"; };
+		5F42CD1F2C65544B0037E2A9 /* BorrowedBookDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BorrowedBookDetails.swift; sourceTree = "<group>"; };
 		5F832C8A2C2DDAD1008D1967 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		5F832C8C2C2DDDE8008D1967 /* AdminDashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminDashboard.swift; sourceTree = "<group>"; };
 		5F832C8E2C2DDE0F008D1967 /* AdminBookItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminBookItem.swift; sourceTree = "<group>"; };
@@ -106,6 +110,8 @@
 				5FBC8DFC2C5EAEAE00069E41 /* Profilepage.swift */,
 				5F2EFA3B2C60904400CE3D5E /* BorrowedBooksView.swift */,
 				5F42CD1B2C631DF20037E2A9 /* AboutLibraryView.swift */,
+				5F42CD1D2C654E640037E2A9 /* Borrowedbooksdetailsview_ForAdmin.swift */,
+				5F42CD1F2C65544B0037E2A9 /* BorrowedBookDetails.swift */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -197,6 +203,8 @@
 				5F832C8F2C2DDE0F008D1967 /* AdminBookItem.swift in Sources */,
 				5566E1612C2B7E070012D5F7 /* DashboardView.swift in Sources */,
 				5FBC8DFD2C5EAEAE00069E41 /* Profilepage.swift in Sources */,
+				5F42CD202C65544B0037E2A9 /* BorrowedBookDetails.swift in Sources */,
+				5F42CD1E2C654E640037E2A9 /* Borrowedbooksdetailsview_ForAdmin.swift in Sources */,
 				5566E14C2C2B7B340012D5F7 /* ContentView.swift in Sources */,
 				5566E14A2C2B7B340012D5F7 /* iosprojectApp.swift in Sources */,
 				5566E1632C2B7EC10012D5F7 /* RegistrationView.swift in Sources */,

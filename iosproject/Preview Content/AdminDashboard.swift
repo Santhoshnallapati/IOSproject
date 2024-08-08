@@ -118,8 +118,16 @@ struct AdminDashboard: View {
                 
                 HStack{
                     
+                    NavigationLink(destination: Borrowedbooksdetailsview_ForAdmin()) {
+                        Text("Borrow Details ")
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                    }
+
                     NavigationLink(destination: Profilepage()) {
-                        Text("Go to Profile")
+                        Text(" Profile")
                             .padding()
                             .background(Color.blue)
                             .foregroundColor(.white)
