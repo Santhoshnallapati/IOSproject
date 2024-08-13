@@ -1,60 +1,153 @@
-//
-//  LoginView.swift
-//  iosproject
-//
-//  Created by Santhosh Nallapati on 2024-06-25.
-//
-
 import SwiftUI
+import FirebaseAuth
+import FirebaseDatabase
 
 struct LoginView: View {
     @Binding var isLoggedIn: Bool
-    @State private var username = ""
+    @Binding var isAdmin: Bool
+    @State private var email = ""
     @State private var password = ""
-    @State private var isClicked: Bool = false
-    
+    @State private var showAlert = false
+    @State private var alertMessage = ""
+    @State private var showRegistrationView = false
+    @State private var navigateToDashboard: Bool = false
+
     var body: some View {
-        VStack {
-            
-            
-            Image(.libraryLogo).resizable().frame(width:250, height:200)
-               .scaledToFit()
-            Text("Login").font(.largeTitle)
-                .padding()
-            TextField("Enter your Username", text: $username)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            
-            SecureField("Enter Password", text: $password)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            
-            Button(action: {
-                
-                isLoggedIn = true
-            }) {
-                Text("Login")
+        NavigationStack {
+            VStack {
+                Image("library_logo")
+                    .resizable()
+                    .frame(width: 250, height: 200)
+                    .scaledToFit()
+
+              
+
+                VStack {
+                    TextField("Enter your Email", text: $email)
+                        .padding()
+                        .frame(width: 400, height: 50, alignment: .center)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .textContentType(.emailAddress)
+
+                    SecureField("Enter Password", text: $password)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding()
+                        .textContentType(.password)
+
+                    Button(action: {
+                    sendPasswordReset()
+                            }) {
+                    Text("Forgot Password?")
+                    .foregroundColor(.blue)
+                    }
                     .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+                    
+                    Button(action: {
+                        login()
+                    }) {
+                        Text("Login")
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                    .alert(isPresented: $showAlert) {
+                        Alert(title: Text("Login Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                    }
+                    .padding()
+                    
+
+                    NavigationLink(destination: RegistrationView(isLoggedIn: $isLoggedIn, isAdmin: $isAdmin), isActive: $showRegistrationView) {
+                        Text("New to Library? Sign Up")
+                            .padding()
+                    }
+                    .padding()
+
+                    
+                    NavigationLink(
+                        destination: AdminDashboard(),
+                        isActive: Binding(
+                            get: { isLoggedIn && isAdmin && navigateToDashboard },
+                            set: { _ in }
+                        )
+                    ) {
+                        EmptyView()
+                    }
+                    
+                    NavigationLink(
+                        destination: UserDashboard(),
+                        isActive: Binding(
+                            get: { isLoggedIn && !isAdmin && navigateToDashboard },
+                            set: { _ in }
+                        )
+                    ) {
+                        EmptyView()
+                    }
+                }
+                .navigationBarTitle("Login")
             }
-            .padding()
-            
-            
-            
-            NavigationLink(destination: RegistrationView(isPresented: $isClicked)) {
-                Text("New to application Sign Up")
-            }
-            .padding()
         }
-        .padding()
     }
-}
+
+    private func login() {
+        Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
+            if let error = error {
+                alertMessage = error.localizedDescription
+                showAlert = true
+                return
+            }
+            
+            if let user = authResult?.user {
+                checkUserRole(for: user)
+            }
+        }
+    }
+
+    private func checkUserRole(for user: User) {
+        let userRef = Database.database().reference().child("users").child(user.uid)
+        userRef.observeSingleEvent(of: .value) { snapshot in
+            guard let userData = snapshot.value as? [String: Any] else {
+                alertMessage = "Failed to retrieve user data"
+                showAlert = true
+                return
+            }
+            
+            if let role = userData["role"] as? String {
+                DispatchQueue.main.async {
+                    isLoggedIn = true
+                    isAdmin = (role == "Admin")
+                    navigateToDashboard = true
+                }
+            } else {
+                alertMessage = "Role not found"
+                showAlert = true
+            }
+        } withCancel: { error in
+            alertMessage = error.localizedDescription
+            showAlert = true
+        }
+    }
+    private func sendPasswordReset() {
+          guard !email.isEmpty else {
+              alertMessage = "Please enter your email address."
+              showAlert = true
+              return
+          }
+
+          Auth.auth().sendPasswordReset(withEmail: email) { error in
+              if let error = error {
+                  alertMessage = error.localizedDescription
+              } else {
+                  alertMessage = "Password reset email sent."
+              }
+              showAlert = true
+          }
+      }
+  }
+
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
-        LoginView(isLoggedIn: .constant(false))
+        LoginView(isLoggedIn: .constant(false), isAdmin: .constant(false))
     }
 }
-

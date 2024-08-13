@@ -3,17 +3,14 @@
 //  iosproject
 //
 //  Created by Santhosh Nallapati on 2024-06-25.
-//
 
 import SwiftUI
-import FirebaseFirestore
+import FirebaseAuth
 
 struct DashboardView: View {
     @State private var searchText = ""
     @State private var books = [String]()
     @State private var borrowedBooks = [String]()
-    
-    let db = Firestore.firestore()
     
     var body: some View {
         VStack {
@@ -41,28 +38,34 @@ struct DashboardView: View {
                     }
                 }
             }
+            .navigationTitle("User")
             
+<<<<<<< HEAD
+            Button(action: {
+                logout()
+            }) {
+                Text("Logout")
+                    .foregroundColor(.red)
+=======
             NavigationLink(destination: BorrowedBooksView(borrowedBooks: $borrowedBooks)) {
                 Text("check Borrowed Books")
                     .frame(minWidth: 0, maxWidth: .infinity)
+>>>>>>> main
                     .padding()
-                    .background(Color.orange)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+                    .background(Color.white)
+                    .cornerRadius(8)
+                    .shadow(radius: 5)
             }
             .padding()
         }
         .padding()
-        .onAppear(perform: fetchBooks)
     }
     
-    private func fetchBooks() {
-        db.collection("books").getDocuments { (querySnapshot, error) in
-            if let error = error {
-                print("Error getting books: \(error)")
-                return
-            }
-            books = querySnapshot?.documents.map { $0["title"] as! String } ?? []
+    private func logout() {
+        do {
+            try Auth.auth().signOut()
+        } catch let signOutError as NSError {
+            print("Error signing out: %@", signOutError)
         }
     }
 }
