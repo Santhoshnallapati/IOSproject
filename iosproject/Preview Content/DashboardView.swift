@@ -40,11 +40,17 @@ struct DashboardView: View {
             }
             .navigationTitle("User")
             
+<<<<<<< HEAD
             Button(action: {
                 logout()
             }) {
                 Text("Logout")
                     .foregroundColor(.red)
+=======
+            NavigationLink(destination: BorrowedBooksView(borrowedBooks: $borrowedBooks)) {
+                Text("check Borrowed Books")
+                    .frame(minWidth: 0, maxWidth: .infinity)
+>>>>>>> main
                     .padding()
                     .background(Color.white)
                     .cornerRadius(8)
@@ -64,6 +70,10 @@ struct DashboardView: View {
     }
 }
 
+
+
+
+//preview
 struct DashboardView_Previews: PreviewProvider {
     static var previews: some View {
         DashboardView()
