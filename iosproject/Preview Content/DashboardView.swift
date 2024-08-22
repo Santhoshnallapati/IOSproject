@@ -6,7 +6,7 @@
 
 import SwiftUI
 import FirebaseAuth
-
+// comment
 struct DashboardView: View {
     @State private var searchText = ""
     @State private var books = [String]()
@@ -40,17 +40,17 @@ struct DashboardView: View {
             }
             .navigationTitle("User")
             
-<<<<<<< HEAD
+
             Button(action: {
                 logout()
             }) {
                 Text("Logout")
                     .foregroundColor(.red)
-=======
+
             NavigationLink(destination: BorrowedBooksView(borrowedBooks: $borrowedBooks)) {
                 Text("check Borrowed Books")
                     .frame(minWidth: 0, maxWidth: .infinity)
->>>>>>> main
+
                     .padding()
                     .background(Color.white)
                     .cornerRadius(8)
